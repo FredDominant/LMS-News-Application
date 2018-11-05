@@ -24,7 +24,7 @@ class NYTimesRetrofitBuilder {
         }
     }
 
-    private fun getOkHttpCLient() : OkHttpClient {
+    private fun getOkHttpClient() : OkHttpClient {
         val okHttpClient = OkHttpClient.Builder().apply {
             addInterceptor(getNYTimesInterceptor())
             addInterceptor(getHttpLoggingInterceptor())
@@ -35,7 +35,7 @@ class NYTimesRetrofitBuilder {
     private fun getBuilder() : Retrofit {
         val retrofitBuilder = Retrofit.Builder().apply {
             baseUrl(BASE_URL)
-            client(getOkHttpCLient())
+            client(getOkHttpClient())
             addConverterFactory(GsonConverterFactory.create())
             addCallAdapterFactory(CoroutineCallAdapterFactory())
         }

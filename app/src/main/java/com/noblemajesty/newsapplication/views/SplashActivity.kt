@@ -1,35 +1,60 @@
 package com.noblemajesty.newsapplication.views
 
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.noblemajesty.newsapplication.R
-import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
-import com.noblemajesty.newsapplication.network.NYTimesService
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
+import com.noblemajesty.newsapplication.models.getFood.NYTimesFoodResponse
+import com.noblemajesty.newsapplication.models.getMovies.NYTimesMoviesResponse
+import com.noblemajesty.newsapplication.models.getNews.NYTimesNewsResponse
+import com.noblemajesty.newsapplication.models.getSports.NYTimesSportsResponse
+import com.noblemajesty.newsapplication.utils.ErrorMessage
+import com.noblemajesty.newsapplication.utils.NetworkConnectivity
+import com.noblemajesty.newsapplication.viewmodels.SplashActivityViewModel
+import java.lang.Exception
 
 class SplashActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: SplashActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = ViewModelProviders.of(this).get(SplashActivityViewModel::class.java)
 
-        val retrofitInstance = NYTimesRetrofitBuilder
-                .getInstance()
-                .createService(NYTimesService::class.java)
-
-        GlobalScope.launch(Dispatchers.Main) {
-            val newsRequest = retrofitInstance.getNews()
-            val newsResponse = newsRequest.await()
-            if (newsResponse.status == "OK") {
-                Log.e("Result is", "${newsResponse.results}")
+        if (NetworkConnectivity(this).isConnected()) {
+            val apiResponse = viewModel.getData()
+            if (apiResponse.containsKey("ERROR")) {
+                goToNewsActivityWithError((apiResponse["ERROR"] as Exception).message!!)
             } else {
-                Log.e("Unsuccessful", "result")
+                Log.e("API response", "$apiResponse")
             }
+        } else {
+            goToNewsActivityWithError(ErrorMessage.NO_NETWORK_DETECTED)
         }
+
+    }
+
+    private fun goToNewsActivityWithError(error: String) {
+        val newsActivityIntent = Intent(this, NewsActivity::class.java)
+        newsActivityIntent.putExtra("ERROR", error)
+        startActivity(newsActivityIntent)
+        finish()
+    }
+
+    private fun goToNewsActivity (newsResponse: NYTimesNewsResponse,
+                                 sportsResponse: NYTimesSportsResponse,
+                                 foodResponse: NYTimesFoodResponse,
+                                 moviesResponse: NYTimesMoviesResponse) {
+        val newsActivityIntent = Intent(this, NewsActivity::class.java)
+        newsActivityIntent.putExtra("NEWS", newsResponse.toJson().toString())
+        newsActivityIntent.putExtra("SPORTS", sportsResponse.toJson().toString())
+        newsActivityIntent.putExtra("FOOD", foodResponse.toJson().toString())
+        newsActivityIntent.putExtra("MOVIES", moviesResponse.toJson().toString())
+        startActivity(newsActivityIntent)
+        finish()
     }
 
 }
