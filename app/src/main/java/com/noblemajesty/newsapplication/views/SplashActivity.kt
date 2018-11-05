@@ -11,7 +11,7 @@ import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 
-class MainActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,13 +22,14 @@ class MainActivity : AppCompatActivity() {
                 .createService(NYTimesService::class.java)
 
         GlobalScope.launch(Dispatchers.Main) {
-            val request = retrofitInstance.getNews()
-            val response = request.await()
-            if (response.status == "OK") {
-                Log.e("Result is", "${response.results}")
+            val newsRequest = retrofitInstance.getNews()
+            val newsResponse = newsRequest.await()
+            if (newsResponse.status == "OK") {
+                Log.e("Result is", "${newsResponse.results}")
             } else {
                 Log.e("Unsuccessful", "result")
             }
         }
     }
+
 }
