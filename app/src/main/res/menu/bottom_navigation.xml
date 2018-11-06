@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <item
+    android:title="News"
+    android:id="@+id/news"
+    android:enabled="true"
+    android:icon="@drawable/ic_whatshot"
+    app:showAsAction="ifRoom"/>
+
+  <item
+    android:title="Sports"
+    android:id="@+id/sports"
+    android:enabled="true"
+    android:icon="@drawable/ic_motorcycle_black_24dp"
+    app:showAsAction="ifRoom"/>
+
+  <item
+    android:title="Food"
+    android:id="@+id/food"
+    android:icon="@drawable/ic_local_dining_black"
+    android:enabled="true"
+    app:showAsAction="ifRoom"/>
+
+  <item
+    android:title="Movies"
+    android:id="@+id/movies"
+    android:enabled="true"
+    android:icon="@drawable/ic_movie_black_24dp"
+    app:showAsAction="ifRoom"/>
+
+</menu>
