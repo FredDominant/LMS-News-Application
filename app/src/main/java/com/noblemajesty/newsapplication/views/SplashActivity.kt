@@ -6,10 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.noblemajesty.newsapplication.R
-import com.noblemajesty.newsapplication.models.getFood.NYTimesFoodResponse
-import com.noblemajesty.newsapplication.models.getMovies.NYTimesMoviesResponse
-import com.noblemajesty.newsapplication.models.getNews.NYTimesNewsResponse
-import com.noblemajesty.newsapplication.models.getSports.NYTimesSportsResponse
+import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.ErrorMessage
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.SplashActivityViewModel
@@ -44,15 +41,16 @@ class SplashActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun goToNewsActivity (newsResponse: NYTimesNewsResponse,
-                                 sportsResponse: NYTimesSportsResponse,
-                                 foodResponse: NYTimesFoodResponse,
-                                 moviesResponse: NYTimesMoviesResponse) {
-        val newsActivityIntent = Intent(this, NewsActivity::class.java)
-        newsActivityIntent.putExtra("NEWS", newsResponse.toJson().toString())
-        newsActivityIntent.putExtra("SPORTS", sportsResponse.toJson().toString())
-        newsActivityIntent.putExtra("FOOD", foodResponse.toJson().toString())
-        newsActivityIntent.putExtra("MOVIES", moviesResponse.toJson().toString())
+    private fun goToNewsActivity (newsResponse: NYTimesResponse,
+                                  sportsResponse: NYTimesResponse,
+                                  foodResponse: NYTimesResponse,
+                                  moviesResponse: NYTimesResponse) {
+        val newsActivityIntent = Intent(this, NewsActivity::class.java).apply {
+            putExtra("NEWS", newsResponse.toJson().toString())
+            putExtra("SPORTS", sportsResponse.toJson().toString())
+            putExtra("FOOD", foodResponse.toJson().toString())
+            putExtra("MOVIES", moviesResponse.toJson().toString())
+        }
         startActivity(newsActivityIntent)
         finish()
     }

@@ -1,18 +1,14 @@
 package com.noblemajesty.newsapplication.viewmodels
 
 import android.arch.lifecycle.ViewModel
-import android.util.Log
-import com.noblemajesty.newsapplication.models.getFood.NYTimesFoodResponse
-import com.noblemajesty.newsapplication.models.getMovies.NYTimesMoviesResponse
-import com.noblemajesty.newsapplication.models.getNews.NYTimesNewsResponse
-import com.noblemajesty.newsapplication.models.getSports.NYTimesSportsResponse
+import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.network.NetworkInteractor
 
 class SplashActivityViewModel: ViewModel() {
-    private var news: NYTimesNewsResponse? = null
-    private var sports: NYTimesSportsResponse? = null
-    private var food: NYTimesFoodResponse? = null
-    private var movies: NYTimesMoviesResponse? = null
+    private var news: NYTimesResponse? = null
+    private var sports: NYTimesResponse? = null
+    private var food: NYTimesResponse? = null
+    private var movies: NYTimesResponse? = null
 
     private var error : Exception? = null
 

@@ -10,29 +10,42 @@
     android:id="@+id/newsActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    
+    <android.support.v7.widget.Toolbar
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/colorPrimary"
+    android:elevation="4dp"
+    android:text="@string/app_name"
+    android:textSize="12sp"
+    app:titleTextColor="#3585e7"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <FrameLayout
       android:id="@+id/fragmentContainer"
       android:layout_width="match_parent"
-      android:layout_height="455dp"
+      android:layout_height="0dp"
+      app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintBottom_toTopOf="@+id/bottomNavigationBar"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.0"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintVertical_bias="1.0"/>
+      app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
 
     <android.support.design.widget.BottomNavigationView
       android:id="@+id/bottomNavigationBar"
-      app:menu="@menu/bottom_navigation"
-      app:itemTextColor="@drawable/bottom_navigation_state"
-      app:itemIconTint="@drawable/bottom_navigation_state"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@color/colorPrimary"
+      app:itemIconTint="@drawable/bottom_navigation_state"
+      app:itemTextColor="@drawable/bottom_navigation_state"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"/>
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="parent"
+      app:menu="@menu/bottom_navigation"/>
 
   </android.support.constraint.ConstraintLayout>
 </layout>

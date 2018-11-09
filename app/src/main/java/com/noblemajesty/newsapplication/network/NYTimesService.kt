@@ -1,22 +1,19 @@
 package com.noblemajesty.newsapplication.network
 
-import com.noblemajesty.newsapplication.models.getFood.NYTimesFoodResponse
-import com.noblemajesty.newsapplication.models.getMovies.NYTimesMoviesResponse
-import com.noblemajesty.newsapplication.models.getNews.NYTimesNewsResponse
-import com.noblemajesty.newsapplication.models.getSports.NYTimesSportsResponse
+import com.noblemajesty.newsapplication.models.NYTimesResponse
 import kotlinx.coroutines.experimental.Deferred
 import retrofit2.http.GET
 
 interface NYTimesService {
     @GET ("home.json")
-    fun getNews() : Deferred<NYTimesNewsResponse>
+    fun getNews() : Deferred<NYTimesResponse>
 
     @GET("food.json")
-    fun getFood() : Deferred<NYTimesFoodResponse>
+    fun getFood() : Deferred<NYTimesResponse>
 
     @GET("sports.json")
-    fun getSports() : Deferred<NYTimesSportsResponse>
+    fun getSports() : Deferred<NYTimesResponse>
 
     @GET("movies.json")
-    fun getMovies() : Deferred<NYTimesMoviesResponse>
+    fun getMovies() : Deferred<NYTimesResponse>
 }
