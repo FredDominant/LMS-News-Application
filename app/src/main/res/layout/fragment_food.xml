@@ -3,22 +3,58 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   tools:context=".views.FoodFragment">
-
+  <data>
+    <import type="android.view.View"/>
+    <variable
+      name="display"
+      type="Boolean"/>
+  </data>
   <android.support.constraint.ConstraintLayout
+    android:id="@+id/newsFragmentContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
+
+    <ProgressBar
+      android:id="@+id/progressBar"
       android:layout_width="wrap_content"
-      android:layout_height="22dp"
+      android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
       android:layout_marginBottom="8dp"
       android:layout_marginStart="8dp"
       android:layout_marginEnd="8dp"
-      android:text="Food Fragment"
+      android:visibility="@{display ? View.VISIBLE : View.GONE}"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+      android:id="@+id/foodSwipeRefresh"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp"
+      android:layout_marginStart="8dp"
+      android:layout_marginEnd="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+      <android.support.v7.widget.RecyclerView
+        android:id="@+id/foodRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
   </android.support.constraint.ConstraintLayout>
 
 </layout>

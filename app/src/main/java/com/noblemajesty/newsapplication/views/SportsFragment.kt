@@ -66,7 +66,6 @@ class SportsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             binding.display = true
             viewModel.fetchSports({
                 sportsResponse = it
-                Log.e("News Response", "$sportsResponse")
                 sportsAdapter.update(sportsResponse.results)
                 binding.display = false
             }, {

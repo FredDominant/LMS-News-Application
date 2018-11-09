@@ -6,7 +6,6 @@ import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.IO
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
 
@@ -14,7 +13,6 @@ class NewsActivityViewModel: ViewModel() {
     var news: NYTimesResponse? = null
     var sports: NYTimesResponse? = null
     var food: NYTimesResponse? = null
-    var movies: NYTimesResponse? = null
     var show = true
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
@@ -56,15 +54,4 @@ class NewsActivityViewModel: ViewModel() {
         }
     }
 
-    fun fetchMovies(success: (result: NYTimesResponse) -> Unit,
-                    error: (error: Exception) -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val request = retrofitInstance.getMovies()
-                val response = request.await()
-                movies = response
-                success(response)
-            } catch (error: Exception) { error(error) }
-        }
-    }
 }

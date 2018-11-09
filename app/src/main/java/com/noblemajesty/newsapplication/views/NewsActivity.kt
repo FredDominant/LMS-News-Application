@@ -30,7 +30,6 @@ class NewsActivity : AppCompatActivity() {
                 R.id.news -> { goToNews();true }
                 R.id.sports -> { goToSports(); true }
                 R.id.food -> { goToFood(); true }
-                R.id.movies -> { goToMovies(); true }
                 else -> true
             }
         }
@@ -51,12 +50,6 @@ class NewsActivity : AppCompatActivity() {
     private fun goToFood() {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, FoodFragment())
-                .commit()
-    }
-
-    private fun goToMovies() {
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, MoviesFragment())
                 .commit()
     }
 

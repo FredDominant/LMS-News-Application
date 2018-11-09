@@ -67,7 +67,6 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             binding.display = true
             viewModel.fetchNews({
                 newsResponse = it
-                Log.e("News Response", "$newsResponse")
                 newsAdapter.update(newsResponse.results)
                 binding.display = false
             }, {

@@ -22,11 +22,4 @@
     android:enabled="true"
     app:showAsAction="ifRoom"/>
 
-  <item
-    android:title="Movies"
-    android:id="@+id/movies"
-    android:enabled="true"
-    android:icon="@drawable/ic_movie_black_24dp"
-    app:showAsAction="ifRoom"/>
-
 </menu>

@@ -13,7 +13,4 @@ interface NYTimesService {
 
     @GET("sports.json")
     fun getSports() : Deferred<NYTimesResponse>
-
-    @GET("movies.json")
-    fun getMovies() : Deferred<NYTimesResponse>
 }

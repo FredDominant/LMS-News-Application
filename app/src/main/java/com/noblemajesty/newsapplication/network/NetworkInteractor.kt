@@ -23,20 +23,17 @@ class NetworkInteractor {
 
     fun fetchDataFromNYTimes(successCallback: (newsResponse: NYTimesResponse,
                                                sportsResponse: NYTimesResponse,
-                                               foodResponse: NYTimesResponse,
-                                               moviesResponse: NYTimesResponse) -> Unit,
+                                               foodResponse: NYTimesResponse) -> Unit,
                              errorCallback: (error: Exception) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             val newsRequest = retrofitInstance.getNews()
             val sportsRequest = retrofitInstance.getSports()
             val foodRequest = retrofitInstance.getFood()
-            val moviesRequest = retrofitInstance.getMovies()
             try {
                 news = newsRequest.await()
                 sports = sportsRequest.await()
                 food = foodRequest.await()
-                movies = moviesRequest.await()
-                successCallback(news, sports, food, movies)
+                successCallback(news, sports, food)
             } catch (error: Exception) {
                 errorCallback(error)
             }

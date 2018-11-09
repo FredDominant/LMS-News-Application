@@ -20,7 +20,8 @@
 
       <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
       <ImageView
         android:id="@+id/newsImage"
@@ -31,57 +32,56 @@
         <TextView
           android:id="@+id/newsTitle"
           android:textStyle="bold"
-          android:layout_width="368dp"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginTop="8dp"
-          android:layout_marginEnd="8dp"
+          android:layout_marginEnd="16dp"
           android:text="@{data.title}"
           android:textAlignment="textStart"
           android:textSize="22sp"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/newsAbstract"
+          app:layout_constraintEnd_toEndOf="@+id/newsAbstract"
+          app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/newsImage"
           tools:text="Democrats Capture Control of House; G.O.P. Holds Senate"/>
 
         <TextView
           android:id="@+id/newsAbstract"
-          android:layout_width="0dp"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="4dp"
-          android:layout_marginStart="8dp"
           android:layout_marginEnd="8dp"
           android:text="@{data.abstract}"
           android:textAlignment="textStart"
           android:textSize="14sp"
           app:layout_constraintEnd_toEndOf="@+id/newsTitle"
-          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintStart_toStartOf="@+id/newsTitle"
           app:layout_constraintTop_toBottomOf="@+id/newsTitle"
           tools:text="Republicans were on track to add to their Senate majority, defeating Democratic senators and holding onto Texas by beating back Representative Beto O’Rourke"/>
 
-      <TextView
-        android:id="@+id/news_publish_date"
-        android:layout_width="wrap_content"
-        android:layout_height="14dp"
-        android:layout_marginTop="4dp"
-        android:textSize="10sp"
-        android:text="@{data.published_date}"
-        app:layout_constraintStart_toStartOf="@+id/newsAbstract"
-        app:layout_constraintTop_toBottomOf="@+id/newsAbstract"
-        tools:text="Nov.7, 2018"/>
+        <TextView
+          android:id="@+id/news_publish_date"
+          android:layout_width="wrap_content"
+          android:layout_height="14dp"
+          android:layout_marginTop="8dp"
+          android:text="@{data.published_date}"
+          android:textSize="10sp"
+          app:layout_constraintStart_toStartOf="@+id/newsTitle"
+          app:layout_constraintTop_toBottomOf="@+id/newsAbstract"
+          tools:text="Nov.7, 2018"/>
 
-      <TextView
-        android:id="@+id/newsJournalist"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:textSize="10sp"
-        android:text="@{data.byline}"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/newsAbstract"
-        app:layout_constraintTop_toBottomOf="@+id/news_publish_date"
-        tools:text="By JONATHAN MARTIN and ALEXANDER BURN"/>
+        <TextView
+          android:id="@+id/newsJournalist"
+          android:textStyle="bold"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:layout_marginBottom="8dp"
+          android:text="@{data.byline}"
+          android:textSize="10sp"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="@+id/newsTitle"
+          app:layout_constraintTop_toBottomOf="@+id/news_publish_date"
+          tools:text="By JONATHAN MARTIN and ALEXANDER BURN"/>
     </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>
