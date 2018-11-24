@@ -13,6 +13,8 @@ bin/
 gen/
 out/
 
+app/build/
+
 # Gradle files
 .gradle/
 build/
@@ -47,6 +49,8 @@ captures/
 
 .idea/instapk.xml
 instapk.log*
+
+local.properties
 
 .idea/*
 instapk.log*
