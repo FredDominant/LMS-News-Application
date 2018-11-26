@@ -50,7 +50,6 @@ captures/
 .idea/instapk.xml
 instapk.log*
 
-local.properties
 
 .idea/*
 instapk.log*
