@@ -2,12 +2,26 @@ language: android
 android:
   components:
     - tools
-    - tools
     - platform-tools
     - build-tools-28.0.2
     - android-28
-    - sys-img-x86-android-28
+    - sys-img-armeabi-v7a-addon-google_apis-google-21
+    - sys-img-armeabi-v7a-addon-google_apis-google-21
+    - sys-img-arm64-v8a-android-24
+  licenses:
+   - android-sdk-preview-license-.+
+   - android-sdk-license-.+
+   - google-gdk-license-.+
 before_install:
   - yes | sdkmanager "platforms;android-28"
+before_script:
+#  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 script:
    - ./gradlew build connectedCheck
+env:
+  global:
+   # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=5

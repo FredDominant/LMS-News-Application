@@ -4,10 +4,6 @@
         "source": "/Users/andeladeveloper/Desktop/Fred/Android/NewsApplication/app/src/main/res/layout/activity_news.xml"
     },
     {
-        "merged": "/Users/andeladeveloper/Desktop/Fred/Android/NewsApplication/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_movies.xml",
-        "source": "/Users/andeladeveloper/Desktop/Fred/Android/NewsApplication/app/src/main/res/layout/fragment_movies.xml"
-    },
-    {
         "merged": "/Users/andeladeveloper/Desktop/Fred/Android/NewsApplication/app/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/fragment_sports.xml",
         "source": "/Users/andeladeveloper/Desktop/Fred/Android/NewsApplication/app/src/main/res/layout/fragment_sports.xml"
     },
