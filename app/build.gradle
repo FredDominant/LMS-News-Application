@@ -4,10 +4,39 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = '0.8.1'
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/kotlin"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
+}
+
 project.ext {
     retrofitVersion = '2.4.0'
     loggingInterceptor = '3.10.0'
 }
+
 
 android {
     compileSdkVersion 28
@@ -24,7 +53,20 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            testCoverageEnabled true
+        }
     }
+
+//    testOptions {
+//        execution 'ANDROID_TEST_ORCHESTRATOR'
+//        animationsDisabled true
+//
+//        unitTests {
+//            includeAndroidResources = true
+//        }
+//    }
 
     dataBinding {
         enabled = true
@@ -33,6 +75,7 @@ android {
     lintOptions {
         abortOnError false
     }
+
 }
 
 dependencies {
@@ -41,6 +84,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:exifinterface:28.0.0'
     implementation 'com.android.support:support-annotations:28.0.0'
+
     implementation ('com.squareup.picasso:picasso:2.71828') {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
@@ -54,7 +98,9 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     kapt "android.arch.lifecycle:compiler:1.1.1"
     implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
 }
