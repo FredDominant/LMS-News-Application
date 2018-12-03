@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1086509794804",
+    "firebase_url": "https://lms-news-application.firebaseio.com",
+    "project_id": "lms-news-application",
+    "storage_bucket": "lms-news-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086509794804:android:605d35dc80a0c346",
+        "android_client_info": {
+          "package_name": "com.noblemajesty.newsapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086509794804-am1qrj4h0upo88251jl0o0lnrrsh6svk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZP9kWIcslFVDfkYdPy2R9Iv5Di3OTkW0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

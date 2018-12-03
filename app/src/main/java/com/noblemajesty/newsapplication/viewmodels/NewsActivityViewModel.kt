@@ -22,7 +22,6 @@ class NewsActivityViewModel: ViewModel() {
         GlobalScope.launch(Dispatchers.Main) {
             try {
                 val request = retrofitInstance.getNews()
-                news = request.await()
                 val response = request.await()
                 news = response
                 success(response)

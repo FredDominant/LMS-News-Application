@@ -8,7 +8,7 @@ import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.databinding.NewsRowItemBinding
 import com.noblemajesty.newsapplication.models.Result
 
-class Adapter (): RecyclerView.Adapter<ViewHolder>() {
+class Adapter: RecyclerView.Adapter<ViewHolder>() {
 
     private lateinit var binding: NewsRowItemBinding
     private val newsResult = mutableListOf<Result>()
