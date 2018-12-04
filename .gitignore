@@ -50,6 +50,8 @@ captures/
 .idea/instapk.xml
 instapk.log*
 
+app/google-service.json
+
 
 .idea/*
 instapk.log*

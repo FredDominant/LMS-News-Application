@@ -1,5 +1,7 @@
 package com.noblemajesty.newsapplication.models
 
+import android.arch.persistence.room.Entity
+
 data class Result(
         val section: String,
         val subsection: String,
@@ -13,10 +15,6 @@ data class Result(
         val published_date: String,
         val material_type_facet: String,
         val kicker: String,
-        val des_facet: List<String>,
-        val org_facet: List<Any>,
-        val per_facet: List<Any>,
-        val geo_facet: List<Any>,
         val multimedia: List<Multimedia>,
         val short_url: String
 )

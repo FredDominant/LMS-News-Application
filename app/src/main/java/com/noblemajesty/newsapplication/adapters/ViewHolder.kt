@@ -14,6 +14,7 @@ class ViewHolder(private var binding: NewsRowItemBinding):
             data = newsArticle
             if (newsArticle.multimedia.isNotEmpty()) loadImage(null, newsArticle.multimedia[3].url)
             else loadImage(R.drawable.picc, null)
+            executePendingBindings()
         }
     }
 
