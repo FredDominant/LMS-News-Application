@@ -4,7 +4,17 @@
             "outputFile": "/Users/andeladeveloper/Desktop/Fred/Android/NewsApplication/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v24/values-v24.xml",
             "map": [
                 {
-                    "source": "/Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/support-media-compat-28.0.0.aar/86e078d605cf9991b17ab630693abdfd/res/values-v24/values-v24.xml",
+                    "source": "/Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/2594ddc549dc106ca810ebbff4e1dd40/res/values-v24/values-v24.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,212",
+                        "endColumns": "156,134",
+                        "endOffsets": "207,342"
+                    }
+                },
+                {
+                    "source": "/Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/support-media-compat-28.0.0.aar/ed8d447af5db45e6a089f5056f4a07e0/res/values-v24/values-v24.xml",
                     "from": {
                         "startLines": "2,3,4,5",
                         "startColumns": "4,4,4,4",
@@ -18,16 +28,6 @@
                         "startOffsets": "347,413,474,540",
                         "endColumns": "65,60,65,66",
                         "endOffsets": "408,469,535,602"
-                    }
-                },
-                {
-                    "source": "/Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/appcompat-v7-28.0.0.aar/73ba9a20b0035824fc079cef7f76455e/res/values-v24/values-v24.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,212",
-                        "endColumns": "156,134",
-                        "endOffsets": "207,342"
                     }
                 }
             ]

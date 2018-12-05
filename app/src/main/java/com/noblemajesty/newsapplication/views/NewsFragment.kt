@@ -69,9 +69,7 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 newsResponse = it
                 newsAdapter.update(newsResponse.results)
                 binding.display = false
-            }, {
-                displaySnackbar(activity!!.newsActivity, it.message!!, ::makeAPICall)
-            })
+            }, {})
         } else {
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
     }

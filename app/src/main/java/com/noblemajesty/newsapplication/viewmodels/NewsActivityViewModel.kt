@@ -1,19 +1,29 @@
 package com.noblemajesty.newsapplication.viewmodels
 
 import android.arch.lifecycle.ViewModel
+import android.util.Log
+import com.noblemajesty.newsapplication.R.id.food
+import com.noblemajesty.newsapplication.R.id.sports
+import com.noblemajesty.newsapplication.database.models.FoodNews
+import com.noblemajesty.newsapplication.database.models.HomeNews
+import com.noblemajesty.newsapplication.database.models.SportsNews
 import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
+import io.realm.Realm
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
 import kotlinx.coroutines.experimental.launch
+import java.util.*
 
 class NewsActivityViewModel: ViewModel() {
     var news: NYTimesResponse? = null
     var sports: NYTimesResponse? = null
     var food: NYTimesResponse? = null
     var show = true
+    private val db = Realm.getDefaultInstance()
+
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
 
@@ -26,6 +36,21 @@ class NewsActivityViewModel: ViewModel() {
                 val response = request.await()
                 news = response
                 success(response)
+                for (item in response.results) {
+                    db.executeTransaction { realmDB ->
+                        val homeNews = realmDB.createObject(HomeNews::class.java, UUID.randomUUID())
+                        homeNews.apply {
+                            abstract = item.abstract
+                            title = item.title
+                            byline = item.byline
+                            publishedDate = item.published_date
+                            image = if (item.multimedia.isNotEmpty()) {
+                                item.multimedia[3].url
+                            } else { null }
+                        }
+                        Log.e("Save to DB", "Done")
+                    }
+                }
             } catch (error: Exception) { error(error) }
         }
     }
@@ -38,6 +63,19 @@ class NewsActivityViewModel: ViewModel() {
                 sports = request.await()
                 val response = request.await()
                 success(response)
+                for (item in response.results) {
+                    db.executeTransaction { realmDB->
+                        val sportsNews = realmDB.createObject(SportsNews::class.java, UUID.randomUUID())
+                        sportsNews.apply {
+                            abstract = item.abstract
+                            title = item.title
+                            byline = item.byline
+                            publishedDate = item.published_date
+                            image = if (item.multimedia.isNotEmpty()) { item.multimedia[3].url }
+                            else { null }
+                        }
+                    }
+                }
             } catch (error: Exception) { error(error) }
         }
     }
@@ -50,8 +88,46 @@ class NewsActivityViewModel: ViewModel() {
                 val response = request.await()
                 food = response
                 success(response)
+                for (item in response.results) {
+                    db.executeTransaction { realmDB->
+                        val foodNews = realmDB.createObject(FoodNews::class.java, UUID.randomUUID())
+                        foodNews.apply {
+                            abstract = item.abstract
+                            title = item.title
+                            byline = item.byline
+                            publishedDate = item.published_date
+                            image = if (item.multimedia.isNotEmpty()) { item.multimedia[3].url }
+                            else { null }
+                        }
+                    }
+                }
+
             } catch (error: Exception) { error(error) }
         }
     }
+
+//    private fun <T : RealmModel> saveDataToRealmDB(objectClass: T, apiResponse: Result) {
+//        var stuff: T? = null
+//        when (stuff) {
+//            is HomeNews -> { stuff = T as? HomeNews }
+//        }
+//
+//    }
+//
+//    private fun doStuff() {
+//
+//    }
+//    db.executeTransactionAsync { realmDB ->
+//        val data = realmDB.createObject(objectClass::class.java, UUID.randomUUID())
+//        data.apply {
+//            this as HomeNews
+//            abstract = apiResponse.abstract
+//            title = apiResponse.title
+//            byline = apiResponse.byline
+//            publishedDate = apiResponse.published_date
+//            image = if (apiResponse.multimedia.isNotEmpty()) { apiResponse.multimedia[3].url }
+//            else { null }
+//        }
+//    }
 
 }

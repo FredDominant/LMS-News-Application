@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 project.ext {
     retrofitVersion = '2.4.0'
@@ -33,6 +33,11 @@ android {
     lintOptions {
         abortOnError false
     }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -54,6 +59,7 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     kapt "android.arch.lifecycle:compiler:1.1.1"
     implementation "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

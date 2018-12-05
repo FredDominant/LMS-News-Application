@@ -71,7 +71,6 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                 foodAdapter.update(foodResponse.results)
                 binding.display = false
             }, {
-                displaySnackbar(activity!!.newsActivity, it.message!!, ::makeAPICall)
             })
         } else {
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
