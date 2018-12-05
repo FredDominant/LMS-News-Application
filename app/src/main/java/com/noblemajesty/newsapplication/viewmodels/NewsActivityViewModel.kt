@@ -11,6 +11,7 @@ import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
 import io.realm.Realm
+import io.realm.kotlin.createObject
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
@@ -37,8 +38,8 @@ class NewsActivityViewModel: ViewModel() {
                 news = response
                 success(response)
                 for (item in response.results) {
-                    db.executeTransaction { realmDB ->
-                        val homeNews = realmDB.createObject(HomeNews::class.java, UUID.randomUUID())
+                    db.executeTransactionAsync({
+                        val homeNews = it.createObject(HomeNews::class.java)
                         homeNews.apply {
                             abstract = item.abstract
                             title = item.title
@@ -48,8 +49,8 @@ class NewsActivityViewModel: ViewModel() {
                                 item.multimedia[3].url
                             } else { null }
                         }
-                        Log.e("Save to DB", "Done")
-                    }
+                    }, { Log.e("News Realm Success", "saved") },
+                        { Log.e("News Realm Error", "${it.message}") })
                 }
             } catch (error: Exception) { error(error) }
         }
@@ -64,17 +65,22 @@ class NewsActivityViewModel: ViewModel() {
                 val response = request.await()
                 success(response)
                 for (item in response.results) {
-                    db.executeTransaction { realmDB->
-                        val sportsNews = realmDB.createObject(SportsNews::class.java, UUID.randomUUID())
-                        sportsNews.apply {
+                    db.executeTransactionAsync({
+                        val homeNews = it.createObject(SportsNews::class.java)
+                        homeNews.apply {
                             abstract = item.abstract
                             title = item.title
                             byline = item.byline
                             publishedDate = item.published_date
-                            image = if (item.multimedia.isNotEmpty()) { item.multimedia[3].url }
-                            else { null }
+                            image = if (item.multimedia.isNotEmpty()) {
+                                item.multimedia[3].url
+                            } else { null }
                         }
-                    }
+                    }, {
+                        Log.e("News Realm Success", "saved")
+                    }, {
+                        Log.e("News Realm Error", "${it.message}")
+                    })
                 }
             } catch (error: Exception) { error(error) }
         }
@@ -89,17 +95,22 @@ class NewsActivityViewModel: ViewModel() {
                 food = response
                 success(response)
                 for (item in response.results) {
-                    db.executeTransaction { realmDB->
-                        val foodNews = realmDB.createObject(FoodNews::class.java, UUID.randomUUID())
-                        foodNews.apply {
+                    db.executeTransactionAsync({
+                        val homeNews = it.createObject(FoodNews::class.java)
+                        homeNews.apply {
                             abstract = item.abstract
                             title = item.title
                             byline = item.byline
                             publishedDate = item.published_date
-                            image = if (item.multimedia.isNotEmpty()) { item.multimedia[3].url }
-                            else { null }
+                            image = if (item.multimedia.isNotEmpty()) {
+                                item.multimedia[3].url
+                            } else { null }
                         }
-                    }
+                    }, {
+                        Log.e("News Realm Success", "saved")
+                    }, {
+                        Log.e("News Realm Error", "${it.message}")
+                    })
                 }
 
             } catch (error: Exception) { error(error) }
