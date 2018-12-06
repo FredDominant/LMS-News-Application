@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Wed Dec 05 18:15:39 WAT 2018
+#Thu Dec 06 11:31:58 WAT 2018
 4.path=classes.dex
 13.baseType=DIRECTORY
 8.set=DEX

@@ -7,17 +7,16 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.Adapter
 import com.noblemajesty.newsapplication.databinding.FragmentSportsBinding
 import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
+import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel.Companion.SPORTS
 import kotlinx.android.synthetic.main.activity_news.*
 
 /**
@@ -64,7 +63,7 @@ class SportsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun makeAPICall() {
         if (NetworkConnectivity(activity!!).isConnected()) {
             binding.display = true
-            viewModel.fetchSports({
+            viewModel.getDataFromAPI(SPORTS, {
                 sportsResponse = it
                 sportsAdapter.update(sportsResponse.results)
                 binding.display = false

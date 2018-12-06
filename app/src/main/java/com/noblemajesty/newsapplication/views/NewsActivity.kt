@@ -27,29 +27,17 @@ class NewsActivity : AppCompatActivity() {
     private fun initializeBottomNavigationBar() {
         binding.bottomNavigationBar.setOnNavigationItemSelectedListener {
             when(it.itemId) {
-                R.id.news -> { goToNews();true }
-                R.id.sports -> { goToSports(); true }
-                R.id.food -> { goToFood(); true }
+                R.id.news -> { goToFragment(NewsFragment());true }
+                R.id.sports -> { goToFragment(SportsFragment()); true }
+                R.id.food -> { goToFragment(FoodFragment()); true }
                 else -> true
             }
         }
     }
 
-    private fun goToNews() {
+    private fun goToFragment(fragment: BaseFragment) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, NewsFragment())
-                .commit()
-    }
-
-    private fun goToSports() {
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, SportsFragment())
-                .commit()
-    }
-
-    private fun goToFood() {
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, FoodFragment())
+                .replace(R.id.fragmentContainer, fragment)
                 .commit()
     }
 

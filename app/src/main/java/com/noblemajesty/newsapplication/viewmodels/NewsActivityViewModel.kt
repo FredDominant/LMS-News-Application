@@ -8,10 +8,13 @@ import com.noblemajesty.newsapplication.database.models.FoodNews
 import com.noblemajesty.newsapplication.database.models.HomeNews
 import com.noblemajesty.newsapplication.database.models.SportsNews
 import com.noblemajesty.newsapplication.models.NYTimesResponse
+import com.noblemajesty.newsapplication.models.Result
 import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
 import io.realm.Realm
+import io.realm.RealmObject
 import io.realm.kotlin.createObject
+import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Dispatchers
 import kotlinx.coroutines.experimental.GlobalScope
 import kotlinx.coroutines.experimental.android.Main
@@ -25,120 +28,88 @@ class NewsActivityViewModel: ViewModel() {
     var show = true
     private val db = Realm.getDefaultInstance()
 
+    companion object {
+        const val NEWS = "news"
+        const val SPORTS = "sports"
+        const val FOOD = "food"
+    }
+
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
 
-    fun fetchNews(success: (result: NYTimesResponse) -> Unit,
-                  error: (error: Exception) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
+    fun getDataFromAPI(newsType: String,
+                       success: (result: NYTimesResponse) -> Unit,
+                       error: (error: Exception) -> Unit) {
+        var request: Deferred<NYTimesResponse>
+        var response: NYTimesResponse
+        GlobalScope.launch (Dispatchers.Main){
             try {
-                val request = retrofitInstance.getNews()
-                news = request.await()
-                val response = request.await()
-                news = response
-                success(response)
-                for (item in response.results) {
-                    db.executeTransactionAsync({
-                        val homeNews = it.createObject(HomeNews::class.java)
-                        homeNews.apply {
-                            abstract = item.abstract
-                            title = item.title
-                            byline = item.byline
-                            publishedDate = item.published_date
-                            image = if (item.multimedia.isNotEmpty()) {
-                                item.multimedia[3].url
-                            } else { null }
-                        }
-                    }, { Log.e("News Realm Success", "saved") },
-                        { Log.e("News Realm Error", "${it.message}") })
-                }
-            } catch (error: Exception) { error(error) }
-        }
-    }
-
-    fun fetchSports(success: (result: NYTimesResponse) -> Unit,
-                    error: (error: Exception) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                val request = retrofitInstance.getSports()
-                sports = request.await()
-                val response = request.await()
-                success(response)
-                for (item in response.results) {
-                    db.executeTransactionAsync({
-                        val homeNews = it.createObject(SportsNews::class.java)
-                        homeNews.apply {
-                            abstract = item.abstract
-                            title = item.title
-                            byline = item.byline
-                            publishedDate = item.published_date
-                            image = if (item.multimedia.isNotEmpty()) {
-                                item.multimedia[3].url
-                            } else { null }
-                        }
-                    }, {
-                        Log.e("News Realm Success", "saved")
-                    }, {
-                        Log.e("News Realm Error", "${it.message}")
-                    })
-                }
-            } catch (error: Exception) { error(error) }
-        }
-    }
-
-    fun fetchFood(success: (result: NYTimesResponse) -> Unit,
-                  error: (error: Exception) -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
-            try {
-                val request = retrofitInstance.getFood()
-                val response = request.await()
-                food = response
-                success(response)
-                for (item in response.results) {
-                    db.executeTransactionAsync({
-                        val homeNews = it.createObject(FoodNews::class.java)
-                        homeNews.apply {
-                            abstract = item.abstract
-                            title = item.title
-                            byline = item.byline
-                            publishedDate = item.published_date
-                            image = if (item.multimedia.isNotEmpty()) {
-                                item.multimedia[3].url
-                            } else { null }
-                        }
-                    }, {
-                        Log.e("News Realm Success", "saved")
-                    }, {
-                        Log.e("News Realm Error", "${it.message}")
-                    })
+                when (newsType) {
+                    NEWS -> {
+                        request = retrofitInstance.getNews()
+                        response = request.await()
+                        news = response
+                        success(response)
+                        for (item in response.results) saveItemToRealmDB(HomeNews::class.java, item)
+                    }
+                    SPORTS -> {
+                        request = retrofitInstance.getSports()
+                        response = request.await()
+                        sports = response
+                        success(response)
+                        for (item in response.results) saveItemToRealmDB(SportsNews::class.java, item)
+                    }
+                    FOOD -> {
+                        request = retrofitInstance.getFood()
+                        response = request.await()
+                        food = response
+                        success(response)
+                        for (item in response.results) saveItemToRealmDB(FoodNews::class.java, item)
+                    }
                 }
 
             } catch (error: Exception) { error(error) }
         }
     }
 
-//    private fun <T : RealmModel> saveDataToRealmDB(objectClass: T, apiResponse: Result) {
-//        var stuff: T? = null
-//        when (stuff) {
-//            is HomeNews -> { stuff = T as? HomeNews }
-//        }
-//
-//    }
-//
-//    private fun doStuff() {
-//
-//    }
-//    db.executeTransactionAsync { realmDB ->
-//        val data = realmDB.createObject(objectClass::class.java, UUID.randomUUID())
-//        data.apply {
-//            this as HomeNews
-//            abstract = apiResponse.abstract
-//            title = apiResponse.title
-//            byline = apiResponse.byline
-//            publishedDate = apiResponse.published_date
-//            image = if (apiResponse.multimedia.isNotEmpty()) { apiResponse.multimedia[3].url }
-//            else { null }
-//        }
-//    }
-
+    private fun <T: RealmObject>saveItemToRealmDB(objectClass: Class<T>, item: Result) {
+        db.executeTransactionAsync({ realmDB ->
+            val generatedObject = realmDB.createObject(objectClass)
+            when(generatedObject) {
+                is HomeNews -> {
+                        (generatedObject as HomeNews).apply {
+                        abstract = item.abstract
+                        title = item.title
+                        byline = item.byline
+                        publishedDate = item.published_date
+                        image = if (item.multimedia.isNotEmpty()) {
+                            item.multimedia[3].url
+                        } else { null }
+                    }
+                }
+                is FoodNews -> {
+                    (generatedObject as FoodNews).apply {
+                        abstract = item.abstract
+                        title = item.title
+                        byline = item.byline
+                        publishedDate = item.published_date
+                        image = if (item.multimedia.isNotEmpty()) {
+                            item.multimedia[3].url
+                        } else { null }
+                    }
+                }
+                is SportsNews -> {
+                    (generatedObject as SportsNews).apply {
+                        abstract = item.abstract
+                        title = item.title
+                        byline = item.byline
+                        publishedDate = item.published_date
+                        image = if (item.multimedia.isNotEmpty()) {
+                            item.multimedia[3].url
+                        } else { null }
+                    }
+                }
+            }
+        }, { Log.e("News Realm Success", "saved") }, { Log.e("News Realm Error", "${it.message}") })
+    }
 }

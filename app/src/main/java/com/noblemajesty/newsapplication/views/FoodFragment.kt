@@ -17,6 +17,7 @@ import com.noblemajesty.newsapplication.databinding.FragmentFoodBinding
 import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
+import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel.Companion.FOOD
 import kotlinx.android.synthetic.main.activity_news.*
 
 /**
@@ -66,7 +67,7 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun makeAPICall() {
         if (NetworkConnectivity(activity!!).isConnected()) {
             binding.display = true
-            viewModel.fetchFood({
+            viewModel.getDataFromAPI(FOOD, {
                 foodResponse = it
                 foodAdapter.update(foodResponse.results)
                 binding.display = false
