@@ -9,6 +9,8 @@ import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.models.Result
 import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
+import com.noblemajesty.newsapplication.repository.HomeNewsRepository
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -22,10 +24,12 @@ class NewsActivityViewModel: ViewModel() {
     var sports: NYTimesResponse? = null
     var food: NYTimesResponse? = null
     var show = true
+    private val db = Realm.getDefaultInstance()
+    private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
+            .createService(NYTimesService::class.java)
     private var disposable: Disposable? = null
     private var realmAsyncTask: RealmAsyncTask? = null
-
-    private val db = Realm.getDefaultInstance()
+    private var homeNewsRepository = HomeNewsRepository(retrofitInstance, db)
 
     companion object {
         const val NEWS = "news"
@@ -33,8 +37,10 @@ class NewsActivityViewModel: ViewModel() {
         const val FOOD = "food"
     }
 
-    private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
-            .createService(NYTimesService::class.java)
+    fun getNews(): Observable<List<HomeNews>> {
+        Log.e("ViewModel", "called from hereeee")
+        return homeNewsRepository.getHomeNews()
+    }
 
     fun getDataFromAPI(newsType: String, success: ((result: NYTimesResponse) -> Unit)? = null,
                        errorCallback: ((errorMessage: String) -> Unit)? = null) {
