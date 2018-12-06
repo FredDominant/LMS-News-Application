@@ -65,9 +65,7 @@ class SportsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             binding.display = true
             viewModel.getDataFromAPI(SPORTS, {
                 sportsResponse = it
-                sportsAdapter.update(sportsResponse.results)
-                binding.display = false
-            }, {
+                sportsAdapter.update(it.results)
             })
         } else {
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
@@ -78,6 +76,11 @@ class SportsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             sportsResponse = it
             sportsAdapter.update(it.results)
         } ?: makeAPICall()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clearDisposable()
     }
 
 }

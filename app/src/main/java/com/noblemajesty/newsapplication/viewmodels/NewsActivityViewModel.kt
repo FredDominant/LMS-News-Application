@@ -2,8 +2,6 @@ package com.noblemajesty.newsapplication.viewmodels
 
 import android.arch.lifecycle.ViewModel
 import android.util.Log
-import com.noblemajesty.newsapplication.R.id.food
-import com.noblemajesty.newsapplication.R.id.sports
 import com.noblemajesty.newsapplication.database.models.FoodNews
 import com.noblemajesty.newsapplication.database.models.HomeNews
 import com.noblemajesty.newsapplication.database.models.SportsNews
@@ -11,21 +9,22 @@ import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.models.Result
 import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
+import io.realm.RealmAsyncTask
+import io.realm.RealmModel
 import io.realm.RealmObject
-import io.realm.kotlin.createObject
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.Dispatchers
-import kotlinx.coroutines.experimental.GlobalScope
-import kotlinx.coroutines.experimental.android.Main
-import kotlinx.coroutines.experimental.launch
-import java.util.*
 
 class NewsActivityViewModel: ViewModel() {
     var news: NYTimesResponse? = null
     var sports: NYTimesResponse? = null
     var food: NYTimesResponse? = null
     var show = true
+    private var disposable: Disposable? = null
+    private var realmAsyncTask: RealmAsyncTask? = null
+
     private val db = Realm.getDefaultInstance()
 
     companion object {
@@ -37,43 +36,53 @@ class NewsActivityViewModel: ViewModel() {
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
 
-    fun getDataFromAPI(newsType: String,
-                       success: (result: NYTimesResponse) -> Unit,
-                       error: (error: Exception) -> Unit) {
-        var request: Deferred<NYTimesResponse>
-        var response: NYTimesResponse
-        GlobalScope.launch (Dispatchers.Main){
-            try {
-                when (newsType) {
-                    NEWS -> {
-                        request = retrofitInstance.getNews()
-                        response = request.await()
-                        news = response
-                        success(response)
-                        for (item in response.results) saveItemToRealmDB(HomeNews::class.java, item)
-                    }
-                    SPORTS -> {
-                        request = retrofitInstance.getSports()
-                        response = request.await()
-                        sports = response
-                        success(response)
-                        for (item in response.results) saveItemToRealmDB(SportsNews::class.java, item)
-                    }
-                    FOOD -> {
-                        request = retrofitInstance.getFood()
-                        response = request.await()
-                        food = response
-                        success(response)
-                        for (item in response.results) saveItemToRealmDB(FoodNews::class.java, item)
-                    }
-                }
-
-            } catch (error: Exception) { error(error) }
+    fun getDataFromAPI(newsType: String, success: ((result: NYTimesResponse) -> Unit)? = null,
+                       errorCallback: ((errorMessage: String) -> Unit)? = null) {
+        when(newsType) {
+            NEWS -> {
+                disposable = retrofitInstance.getNews()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    news = it
+                                    removePreviousDataFromRealmDB(HomeNews::class.java)
+                                    for (item in it.results) saveItemToRealmDB(HomeNews::class.java, item)
+                                    success?.invoke(it)
+                                },
+                                { it -> it.message?.let{ errorCallback?.invoke(it) } })
+            }
+            SPORTS -> {
+                disposable = retrofitInstance.getSports()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    sports = it
+                                    removePreviousDataFromRealmDB(SportsNews::class.java)
+                                    for (item in it.results) saveItemToRealmDB(SportsNews::class.java, item)
+                                    success?.invoke(it)
+                                },
+                                { it -> it.message?.let{ errorCallback?.invoke(it) } }, {})
+            }
+            FOOD -> {
+                disposable = retrofitInstance.getFood()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {
+                                    food = it
+                                    removePreviousDataFromRealmDB(FoodNews::class.java)
+                                    for (item in it.results) saveItemToRealmDB(FoodNews::class.java, item)
+                                    success?.invoke(it)
+                                },
+                                { it -> it.message?.let{ errorCallback?.invoke(it) } }, {})
+            }
         }
     }
 
     private fun <T: RealmObject>saveItemToRealmDB(objectClass: Class<T>, item: Result) {
-        db.executeTransactionAsync({ realmDB ->
+        realmAsyncTask = db.executeTransactionAsync({ realmDB ->
             val generatedObject = realmDB.createObject(objectClass)
             when(generatedObject) {
                 is HomeNews -> {
@@ -110,6 +119,26 @@ class NewsActivityViewModel: ViewModel() {
                     }
                 }
             }
+            closeDB()
         }, { Log.e("News Realm Success", "saved") }, { Log.e("News Realm Error", "${it.message}") })
     }
+
+    private fun <T : RealmModel?> removePreviousDataFromRealmDB(clazz: Class<T>) {
+        val result = db.where(clazz).findAll()
+        db.beginTransaction()
+        val resp = result.deleteAllFromRealm()
+        db.commitTransaction()
+        Log.e("delete success?", "$resp")
+    }
+
+    fun clearDisposable() = disposable?.dispose()
+
+    private fun closeDB() = if (db.isClosed) { } else db.close()
+
+    fun clearAsyncTask() {
+        realmAsyncTask?.let {
+            if (!it.isCancelled) it.cancel()
+        }
+    }
+
 }

@@ -41,4 +41,9 @@ class NewsActivity : AppCompatActivity() {
                 .commit()
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.clearAsyncTask()
+    }
+
 }

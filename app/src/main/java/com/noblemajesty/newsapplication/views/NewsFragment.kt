@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,9 +67,9 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             binding.display = true
             viewModel.getDataFromAPI(NEWS, {
                 newsResponse = it
-                newsAdapter.update(newsResponse.results)
-                binding.display = false
-            }, {})
+                newsAdapter.update(it.results)
+            })
+
         } else {
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
     }
@@ -78,5 +79,10 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             newsResponse = it
             newsAdapter.update(it.results)
         } ?: makeAPICall()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.clearDisposable()
     }
 }
