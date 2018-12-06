@@ -92,12 +92,12 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
     }
 
-    private fun getData() {
-        viewModel.news?.let {
-            newsResponse = it
-            newsAdapter.update(it.results)
-        } ?: makeAPICall()
-    }
+//    private fun getData() {
+//        viewModel.news?.let {
+//            newsResponse = it
+//            newsAdapter.update(it.results)
+//        } ?: makeAPICall()
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

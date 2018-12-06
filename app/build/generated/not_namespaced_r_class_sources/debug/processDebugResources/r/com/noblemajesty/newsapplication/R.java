@@ -5235,7 +5235,7 @@ public final class R {
     public static final int navigation_header_container=0x7f080070;
     public static final int never=0x7f080071;
     public static final int news=0x7f080072;
-    public static final int newsAbstract=0x7f080073;
+    public static final int newsAbstractField=0x7f080073;
     public static final int newsActivity=0x7f080074;
     public static final int newsFragmentContainer=0x7f080075;
     public static final int newsImage=0x7f080076;

@@ -1147,7 +1147,7 @@ int id multiply 0x7f08006f
 int id navigation_header_container 0x7f080070
 int id never 0x7f080071
 int id news 0x7f080072
-int id newsAbstract 0x7f080073
+int id newsAbstractField 0x7f080073
 int id newsActivity 0x7f080074
 int id newsFragmentContainer 0x7f080075
 int id newsImage 0x7f080076
