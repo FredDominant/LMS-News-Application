@@ -7,17 +7,22 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.Adapter
+import com.noblemajesty.newsapplication.adapters.NewsAdapter
+import com.noblemajesty.newsapplication.database.models.FoodNews
+import com.noblemajesty.newsapplication.database.models.HomeNews
 import com.noblemajesty.newsapplication.databinding.FragmentFoodBinding
 import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel.Companion.FOOD
+import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_news.*
 
 /**
@@ -28,8 +33,6 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: FragmentFoodBinding
     private lateinit var viewModel: NewsActivityViewModel
-    private lateinit var foodResponse: NYTimesResponse
-    private val foodAdapter by lazy { Adapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +42,6 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_food, container, false)
-        initializeRecyclerView()
         return binding.root
     }
 
@@ -49,29 +51,34 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         getData()
     }
 
-    private fun initializeRecyclerView() {
+    private fun initializeRecyclerView(list: RealmResults<FoodNews>) {
         binding.foodRecyclerView.apply {
             setHasFixedSize(true)
-            adapter = foodAdapter
+            adapter = NewsAdapter(list)
             layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         }
     }
 
     private fun getData() {
-        viewModel.food?.let {
-            foodResponse = it
-            foodAdapter.update(it.results)
-        } ?: makeAPICall()
+        val data = viewModel.loadDataFromDB(FoodNews::class.java)
+        initializeRecyclerView(data!!)
+//        viewModel.food?.let {
+//            foodAdapter.update(it.results)
+//        } ?: makeAPICall()
     }
 
     private fun makeAPICall() {
         if (NetworkConnectivity(activity!!).isConnected()) {
             binding.display = true
-             viewModel.getDataFromAPI(FOOD, {
-                 foodResponse = it
-                 foodAdapter.update(it.results)
-             })
+            viewModel.getDataFromAPI(NewsActivityViewModel.NEWS) {
+                getData()
+            }
+//            binding.display = true
+//             viewModel.getDataFromAPI(FOOD, {
+//                 foodAdapter.update(it.results)
+//             })
         } else {
+            Log.e("No Newtork", "herrreeeeee")
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
     }
 

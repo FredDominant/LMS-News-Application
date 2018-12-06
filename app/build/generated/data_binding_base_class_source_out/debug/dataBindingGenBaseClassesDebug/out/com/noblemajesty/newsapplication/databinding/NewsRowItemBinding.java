@@ -11,12 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.noblemajesty.newsapplication.models.Result;
 
 public abstract class NewsRowItemBinding extends ViewDataBinding {
-  @NonNull
-  public final TextView newsAbstract;
-
   @NonNull
   public final ImageView newsImage;
 
@@ -30,24 +26,63 @@ public abstract class NewsRowItemBinding extends ViewDataBinding {
   public final TextView newsTitle;
 
   @Bindable
-  protected Result mData;
+  protected String mTitle;
+
+  @Bindable
+  protected String mNewsAbstract;
+
+  @Bindable
+  protected String mPublishedDate;
+
+  @Bindable
+  protected String mByline;
+
+  @Bindable
+  protected String mImage;
 
   protected NewsRowItemBinding(DataBindingComponent _bindingComponent, View _root,
-      int _localFieldCount, TextView newsAbstract, ImageView newsImage, TextView newsJournalist,
-      TextView newsPublishDate, TextView newsTitle) {
+      int _localFieldCount, ImageView newsImage, TextView newsJournalist, TextView newsPublishDate,
+      TextView newsTitle) {
     super(_bindingComponent, _root, _localFieldCount);
-    this.newsAbstract = newsAbstract;
     this.newsImage = newsImage;
     this.newsJournalist = newsJournalist;
     this.newsPublishDate = newsPublishDate;
     this.newsTitle = newsTitle;
   }
 
-  public abstract void setData(@Nullable Result data);
+  public abstract void setTitle(@Nullable String title);
 
   @Nullable
-  public Result getData() {
-    return mData;
+  public String getTitle() {
+    return mTitle;
+  }
+
+  public abstract void setNewsAbstract(@Nullable String newsAbstract);
+
+  @Nullable
+  public String getNewsAbstract() {
+    return mNewsAbstract;
+  }
+
+  public abstract void setPublishedDate(@Nullable String publishedDate);
+
+  @Nullable
+  public String getPublishedDate() {
+    return mPublishedDate;
+  }
+
+  public abstract void setByline(@Nullable String byline);
+
+  @Nullable
+  public String getByline() {
+    return mByline;
+  }
+
+  public abstract void setImage(@Nullable String image);
+
+  @Nullable
+  public String getImage() {
+    return mImage;
   }
 
   @NonNull

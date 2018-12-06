@@ -12,10 +12,7 @@ import com.noblemajesty.newsapplication.network.NYTimesService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
-import io.realm.RealmAsyncTask
-import io.realm.RealmModel
-import io.realm.RealmObject
+import io.realm.*
 
 class NewsActivityViewModel: ViewModel() {
     var news: NYTimesResponse? = null
@@ -36,47 +33,47 @@ class NewsActivityViewModel: ViewModel() {
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
 
-    fun getDataFromAPI(newsType: String, success: ((result: NYTimesResponse) -> Unit)? = null,
-                       errorCallback: ((errorMessage: String) -> Unit)? = null) {
+    fun getDataFromAPI(newsType: String, success: (() -> Unit)? = null) {
         when(newsType) {
             NEWS -> {
                 disposable = retrofitInstance.getNews()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    news = it
-                                    removePreviousDataFromRealmDB(HomeNews::class.java)
-                                    for (item in it.results) saveItemToRealmDB(HomeNews::class.java, item)
-                                    success?.invoke(it)
-                                },
-                                { it -> it.message?.let{ errorCallback?.invoke(it) } })
+                        .subscribe {
+                            news = it
+                            removePreviousDataFromRealmDB(HomeNews::class.java)
+                            for (item in it.results) {
+                                Log.e("item", "$item")
+                                saveItemToRealmDB(HomeNews::class.java, item)
+                            }
+                            success?.invoke()
+                        }
             }
             SPORTS -> {
                 disposable = retrofitInstance.getSports()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    sports = it
-                                    removePreviousDataFromRealmDB(SportsNews::class.java)
-                                    for (item in it.results) saveItemToRealmDB(SportsNews::class.java, item)
-                                    success?.invoke(it)
-                                },
-                                { it -> it.message?.let{ errorCallback?.invoke(it) } }, {})
+                        .subscribe {
+                            sports = it
+                            removePreviousDataFromRealmDB(SportsNews::class.java)
+                            for (item in it.results){
+                                saveItemToRealmDB(SportsNews::class.java, item)
+                            }
+                            success?.invoke()
+                        }
             }
             FOOD -> {
                 disposable = retrofitInstance.getFood()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    food = it
-                                    removePreviousDataFromRealmDB(FoodNews::class.java)
-                                    for (item in it.results) saveItemToRealmDB(FoodNews::class.java, item)
-                                    success?.invoke(it)
-                                },
-                                { it -> it.message?.let{ errorCallback?.invoke(it) } }, {})
+                        .subscribe {
+                            food = it
+                            removePreviousDataFromRealmDB(FoodNews::class.java)
+                            for (item in it.results) {
+                                saveItemToRealmDB(FoodNews::class.java, item)
+                            }
+                            success?.invoke()
+                        }
             }
         }
     }
@@ -119,16 +116,24 @@ class NewsActivityViewModel: ViewModel() {
                     }
                 }
             }
-            closeDB()
+//            closeDB()
         }, { Log.e("News Realm Success", "saved") }, { Log.e("News Realm Error", "${it.message}") })
     }
 
-    private fun <T : RealmModel?> removePreviousDataFromRealmDB(clazz: Class<T>) {
+    private fun <T: RealmObject> removePreviousDataFromRealmDB(clazz: Class<T>) {
         val result = db.where(clazz).findAll()
         db.beginTransaction()
         val resp = result.deleteAllFromRealm()
         db.commitTransaction()
         Log.e("delete success?", "$resp")
+    }
+
+    fun <T: RealmObject> loadDataFromDB(clazz: Class<T>): RealmResults<T>? {
+        val data = db.where(clazz)
+                .findAll()
+        Log.e("Load", "${data.load()}")
+        for (i in data) Log.e("data offline", "$i")
+        return data
     }
 
     fun clearDisposable() = disposable?.dispose()

@@ -11,7 +11,7 @@ class ViewHolder(private var binding: NewsRowItemBinding):
 
     fun setValues(newsArticle: Result) {
         binding.apply {
-            data = newsArticle
+//            data = newsArticle
             if (newsArticle.multimedia.isNotEmpty()) loadImage(null, newsArticle.multimedia[3].url)
             else loadImage(R.drawable.picc, null)
         }

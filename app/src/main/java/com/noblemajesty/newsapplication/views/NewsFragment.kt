@@ -13,11 +13,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.Adapter
+import com.noblemajesty.newsapplication.adapters.NewsAdapter
+import com.noblemajesty.newsapplication.database.models.HomeNews
 import com.noblemajesty.newsapplication.databinding.FragmentNewsBinding
 import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel.Companion.NEWS
+import io.realm.RealmResults
 import kotlinx.android.synthetic.main.activity_news.*
 
 
@@ -29,8 +32,7 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: FragmentNewsBinding
     private lateinit var viewModel: NewsActivityViewModel
-    private lateinit var newsResponse: NYTimesResponse
-    private val newsAdapter by lazy { Adapter() }
+//    private val newsAdapter by lazy { Adapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,24 +42,31 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_news, container, false)
-        initializeRecyclerView()
+//        initializeRecyclerView()
+        binding.display = true
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.newsSwipeRefresh.setOnRefreshListener(this)
         getData()
+        makeAPICall()
+        binding.newsSwipeRefresh.setOnRefreshListener(this)
     }
 
     override fun onRefresh() {
         onSwipeRefresh(binding.newsSwipeRefresh) { makeAPICall() }
     }
 
-    private fun initializeRecyclerView() {
+    private fun initializeRecyclerView(list: RealmResults<HomeNews>) {
+//        binding.newsRecyclerView.apply {
+//            setHasFixedSize(true)
+//            adapter = newsAdapter
+//            layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
+//        }
         binding.newsRecyclerView.apply {
             setHasFixedSize(true)
-            adapter = newsAdapter
+            adapter = NewsAdapter(list)
             layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         }
     }
@@ -65,20 +74,27 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun makeAPICall() {
         if (NetworkConnectivity(activity!!).isConnected()) {
             binding.display = true
-            viewModel.getDataFromAPI(NEWS, {
-                newsResponse = it
-                newsAdapter.update(it.results)
-            })
-
+            Log.e("Making calllllll", "calllll")
+            viewModel.getDataFromAPI(NEWS) {
+                getData()
+            }
+//            viewModel.getDataFromAPI(NEWS, {
+//                newsResponse = it
+////                newsAdapter.update(it.results)
+//            })
         } else {
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
     }
 
     private fun getData() {
-        viewModel.news?.let {
-            newsResponse = it
-            newsAdapter.update(it.results)
-        } ?: makeAPICall()
+        val data = viewModel.loadDataFromDB(HomeNews::class.java)
+        Log.e("data here is >>>>", "$data")
+        initializeRecyclerView(data!!)
+        binding.display = false
+//        viewModel.news?.let {
+//            newsResponse = it
+////            newsAdapter.update(it.results)
+//        } ?: makeAPICall()
     }
 
     override fun onDestroy() {
