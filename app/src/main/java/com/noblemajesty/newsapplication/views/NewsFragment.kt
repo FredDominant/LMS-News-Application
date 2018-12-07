@@ -13,7 +13,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
-import com.noblemajesty.newsapplication.adapters.Adapter
+import com.noblemajesty.newsapplication.adapters.NewsAdapter
+import com.noblemajesty.newsapplication.database.models.HomeNews
 import com.noblemajesty.newsapplication.databinding.FragmentNewsBinding
 import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
@@ -32,20 +33,20 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: FragmentNewsBinding
     private lateinit var viewModel: NewsActivityViewModel
-    private lateinit var newsResponse: NYTimesResponse
-    private val newsAdapter by lazy { Adapter() }
+    private val newsAdapter by lazy { NewsAdapter<HomeNews>() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(NewsActivityViewModel::class.java)
     }
 
+    @SuppressLint("CheckResult")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_news, container, false)
         initializeRecyclerView()
         Log.e("Hereeeee", "lllllllllllllll")
-
+        getData()
         return binding.root
     }
 
@@ -53,51 +54,42 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.newsSwipeRefresh.setOnRefreshListener(this)
-//        getData()
         binding.display = true
+    }
+
+    override fun onRefresh() {
+        onSwipeRefresh(binding.newsSwipeRefresh) { getData() }
+    }
+
+    private fun initializeRecyclerView() {
+        binding.newsRecyclerView.apply {
+            this.adapter = newsAdapter
+            layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    private fun getData() {
+        if (!NetworkConnectivity(activity!!).isConnected()) {
+            displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
+        }
         viewModel.getNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {
                             Log.e("repository model", "$it")
-                            binding.display = false
+                            if (it.isNotEmpty()) {
+                                Log.e("news size", "${it.size}")
+                                newsAdapter.updateList(it)
+                                binding.display = false
+                            }
                         },
                         { Log.e("repository model Error", "$it")
-                        it.printStackTrace()}
+                            it.printStackTrace()}
                 )
+
     }
-
-    override fun onRefresh() {
-        onSwipeRefresh(binding.newsSwipeRefresh) { makeAPICall() }
-    }
-
-    private fun initializeRecyclerView() {
-        binding.newsRecyclerView.apply {
-            setHasFixedSize(true)
-            adapter = newsAdapter
-            layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
-        }
-    }
-
-    private fun makeAPICall() {
-        if (NetworkConnectivity(activity!!).isConnected()) {
-            binding.display = true
-            viewModel.getDataFromAPI(NEWS, {
-                newsResponse = it
-                newsAdapter.update(it.results)
-            })
-
-        } else {
-            displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
-    }
-
-//    private fun getData() {
-//        viewModel.news?.let {
-//            newsResponse = it
-//            newsAdapter.update(it.results)
-//        } ?: makeAPICall()
-//    }
 
     override fun onDestroy() {
         super.onDestroy()

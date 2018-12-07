@@ -18,6 +18,7 @@ import io.realm.Realm
 import io.realm.RealmAsyncTask
 import io.realm.RealmModel
 import io.realm.RealmObject
+import java.util.concurrent.TimeUnit
 
 class NewsActivityViewModel: ViewModel() {
     var news: NYTimesResponse? = null
@@ -40,6 +41,7 @@ class NewsActivityViewModel: ViewModel() {
     fun getNews(): Observable<List<HomeNews>> {
         Log.e("ViewModel", "called from hereeee")
         return homeNewsRepository.getHomeNews()
+                .debounce(400, TimeUnit.MILLISECONDS)
     }
 
     fun getDataFromAPI(newsType: String, success: ((result: NYTimesResponse) -> Unit)? = null,

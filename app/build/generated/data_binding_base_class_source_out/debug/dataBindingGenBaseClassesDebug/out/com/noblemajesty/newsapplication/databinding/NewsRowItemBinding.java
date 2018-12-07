@@ -14,9 +14,6 @@ import android.widget.TextView;
 
 public abstract class NewsRowItemBinding extends ViewDataBinding {
   @NonNull
-  public final TextView newsAbstractField;
-
-  @NonNull
   public final ImageView newsImage;
 
   @NonNull
@@ -35,19 +32,18 @@ public abstract class NewsRowItemBinding extends ViewDataBinding {
   protected String mNewsAbstract;
 
   @Bindable
-  protected String mByline;
+  protected String mPublishedDate;
 
   @Bindable
-  protected String mPublishedDate;
+  protected String mByline;
 
   @Bindable
   protected String mImage;
 
   protected NewsRowItemBinding(DataBindingComponent _bindingComponent, View _root,
-      int _localFieldCount, TextView newsAbstractField, ImageView newsImage,
-      TextView newsJournalist, TextView newsPublishDate, TextView newsTitle) {
+      int _localFieldCount, ImageView newsImage, TextView newsJournalist, TextView newsPublishDate,
+      TextView newsTitle) {
     super(_bindingComponent, _root, _localFieldCount);
-    this.newsAbstractField = newsAbstractField;
     this.newsImage = newsImage;
     this.newsJournalist = newsJournalist;
     this.newsPublishDate = newsPublishDate;
@@ -68,18 +64,18 @@ public abstract class NewsRowItemBinding extends ViewDataBinding {
     return mNewsAbstract;
   }
 
-  public abstract void setByline(@Nullable String byline);
-
-  @Nullable
-  public String getByline() {
-    return mByline;
-  }
-
   public abstract void setPublishedDate(@Nullable String publishedDate);
 
   @Nullable
   public String getPublishedDate() {
     return mPublishedDate;
+  }
+
+  public abstract void setByline(@Nullable String byline);
+
+  @Nullable
+  public String getByline() {
+    return mByline;
   }
 
   public abstract void setImage(@Nullable String image);
