@@ -28,12 +28,15 @@ MERGED from [com.android.support:slidingpanelayout:28.0.0] /Users/andeladevelope
 MERGED from [com.android.support:customview:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/customview-28.0.0.aar/505d3e4c3593595f20d8e2b257f154d7/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-28.0.0.aar/cf4f1e825c9ae3bb67ceb7bf49b07a6c/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/2ad76cbafcf7420b91435373f231ed58/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.persistence.room:runtime:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/e3b11c7a16b8531b9bf38d4e81635f3e/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-core-utils:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/b55f73f0e685ac7f2cffeb554ff04e54/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:loader:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/loader-28.0.0.aar/ab6549e2de3c97f38a9d86fec5ae1927/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:support-compat:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/support-compat-28.0.0.aar/36088d6bcbd1d8b6268db7e3a4488220/AndroidManifest.xml:17:1-24:12
 MERGED from [com.android.support:versionedparcelable:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/versionedparcelable-28.0.0.aar/2d8501745970c165858c6e67962764ce/AndroidManifest.xml:17:1-25:12
 MERGED from [com.android.support:cursoradapter:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/cursoradapter-28.0.0.aar/0710d7001f3f6a24e250dfbe18b98d3d/AndroidManifest.xml:17:1-22:12
 MERGED from [com.android.support:cardview-v7:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/cardview-v7-28.0.0.aar/72033bcfaceea55a906d9e0a4daa8fbd/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.persistence:db-framework:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/db-framework-1.1.1.aar/290fbf96bb9d99a171fa3a5c38ff36b9/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.persistence:db:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/db-1.1.1.aar/e2aa4632ac159e944e32c6373315265e/AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/9dfd0533e7c3c87f1f668b7d2520ab00/AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/55dcdcbe5c61ac4c6a2a1f5948fe1362/AndroidManifest.xml:17:1-22:12
 MERGED from [android.arch.core:runtime:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/1884ffc6bb353beaee69e1dacdb450f2/AndroidManifest.xml:17:1-22:12
@@ -171,6 +174,8 @@ MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/andeladevelop
 MERGED from [com.android.support:swiperefreshlayout:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-28.0.0.aar/cf4f1e825c9ae3bb67ceb7bf49b07a6c/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/2ad76cbafcf7420b91435373f231ed58/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:asynclayoutinflater:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-28.0.0.aar/2ad76cbafcf7420b91435373f231ed58/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.persistence.room:runtime:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/e3b11c7a16b8531b9bf38d4e81635f3e/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.persistence.room:runtime:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/runtime-1.1.1.aar/e3b11c7a16b8531b9bf38d4e81635f3e/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-core-utils:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/b55f73f0e685ac7f2cffeb554ff04e54/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:support-core-utils:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/support-core-utils-28.0.0.aar/b55f73f0e685ac7f2cffeb554ff04e54/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:loader:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/loader-28.0.0.aar/ab6549e2de3c97f38a9d86fec5ae1927/AndroidManifest.xml:20:5-44
@@ -183,6 +188,10 @@ MERGED from [com.android.support:cursoradapter:28.0.0] /Users/andeladeveloper/.g
 MERGED from [com.android.support:cursoradapter:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/cursoradapter-28.0.0.aar/0710d7001f3f6a24e250dfbe18b98d3d/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:cardview-v7:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/cardview-v7-28.0.0.aar/72033bcfaceea55a906d9e0a4daa8fbd/AndroidManifest.xml:20:5-44
 MERGED from [com.android.support:cardview-v7:28.0.0] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/cardview-v7-28.0.0.aar/72033bcfaceea55a906d9e0a4daa8fbd/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.persistence:db-framework:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/db-framework-1.1.1.aar/290fbf96bb9d99a171fa3a5c38ff36b9/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.persistence:db-framework:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/db-framework-1.1.1.aar/290fbf96bb9d99a171fa3a5c38ff36b9/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.persistence:db:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/db-1.1.1.aar/e2aa4632ac159e944e32c6373315265e/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.persistence:db:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/db-1.1.1.aar/e2aa4632ac159e944e32c6373315265e/AndroidManifest.xml:20:5-44
 MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/9dfd0533e7c3c87f1f668b7d2520ab00/AndroidManifest.xml:20:5-44
 MERGED from [android.arch.lifecycle:livedata:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/livedata-1.1.1.aar/9dfd0533e7c3c87f1f668b7d2520ab00/AndroidManifest.xml:20:5-44
 MERGED from [android.arch.lifecycle:livedata-core:1.1.1] /Users/andeladeveloper/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.1.aar/55dcdcbe5c61ac4c6a2a1f5948fe1362/AndroidManifest.xml:20:5-44

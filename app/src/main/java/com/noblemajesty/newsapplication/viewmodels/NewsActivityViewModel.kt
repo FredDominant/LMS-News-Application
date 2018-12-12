@@ -1,36 +1,27 @@
 package com.noblemajesty.newsapplication.viewmodels
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
+import com.noblemajesty.newsapplication.database.NewsApplicationDataBase
 import com.noblemajesty.newsapplication.database.models.FoodNews
 import com.noblemajesty.newsapplication.database.models.HomeNews
 import com.noblemajesty.newsapplication.database.models.SportsNews
 import com.noblemajesty.newsapplication.models.NYTimesResponse
-import com.noblemajesty.newsapplication.models.Result
 import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
-import com.noblemajesty.newsapplication.repository.HomeNewsRepository
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
-import io.realm.RealmAsyncTask
-import io.realm.RealmModel
-import io.realm.RealmObject
-import java.util.concurrent.TimeUnit
 
 class NewsActivityViewModel: ViewModel() {
     var news: NYTimesResponse? = null
     var sports: NYTimesResponse? = null
     var food: NYTimesResponse? = null
     var show = true
-    private val db = Realm.getDefaultInstance()
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
     private var disposable: Disposable? = null
-    private var realmAsyncTask: RealmAsyncTask? = null
-    private var homeNewsRepository = HomeNewsRepository(retrofitInstance, db)
+    var database: NewsApplicationDataBase? = null
 
     companion object {
         const val NEWS = "news"
@@ -38,115 +29,68 @@ class NewsActivityViewModel: ViewModel() {
         const val FOOD = "food"
     }
 
-    fun getNews(): Observable<List<HomeNews>> {
-        Log.e("ViewModel", "called from hereeee")
-        return homeNewsRepository.getHomeNews()
-                .debounce(400, TimeUnit.MILLISECONDS)
+    fun getHomeNews(): LiveData<List<HomeNews>>? {
+        Log.e("getting from News API", "I am hereeeeeeeeeee")
+        disposable = retrofitInstance.getNews()
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        { apiResponse ->
+                            apiResponse.results.map { news ->
+                                val multimedia = news.multimedia
+                                val image = if (multimedia.isNotEmpty()) { multimedia[3].url } else { null }
+                                val homeNews = HomeNews( title = news.title,
+                                        abstract = news.abstract,
+                                        byline = news.byline,
+                                        publishedDate = news.published_date,
+                                        image = image)
+                                Log.e("from API", "$homeNews")
+                                saveNewsToDB(homeNews)
+                            }
+                        },
+                        {
+                            Log.e("from inside API", "$it")
+                            it.printStackTrace()
+                        })
+        return database?.getDao()?.getAllHomeNews()
     }
 
-    fun getDataFromAPI(newsType: String, success: ((result: NYTimesResponse) -> Unit)? = null,
-                       errorCallback: ((errorMessage: String) -> Unit)? = null) {
-        when(newsType) {
-            NEWS -> {
-                disposable = retrofitInstance.getNews()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    news = it
-                                    removePreviousDataFromRealmDB(HomeNews::class.java)
-                                    for (item in it.results) saveItemToRealmDB(HomeNews::class.java, item)
-                                    success?.invoke(it)
-                                },
-                                { it -> it.message?.let{ errorCallback?.invoke(it) } })
-            }
-            SPORTS -> {
-                disposable = retrofitInstance.getSports()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    sports = it
-                                    removePreviousDataFromRealmDB(SportsNews::class.java)
-                                    for (item in it.results) saveItemToRealmDB(SportsNews::class.java, item)
-                                    success?.invoke(it)
-                                },
-                                { it -> it.message?.let{ errorCallback?.invoke(it) } }, {})
-            }
-            FOOD -> {
-                disposable = retrofitInstance.getFood()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                {
-                                    food = it
-                                    removePreviousDataFromRealmDB(FoodNews::class.java)
-                                    for (item in it.results) saveItemToRealmDB(FoodNews::class.java, item)
-                                    success?.invoke(it)
-                                },
-                                { it -> it.message?.let{ errorCallback?.invoke(it) } }, {})
-            }
-        }
+    fun getSportsNews(): LiveData<List<SportsNews>>? {
+        Log.e("getting from API", "I am hereeeeeeeeeee")
+        disposable = retrofitInstance.getSports()
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        {
+                            for (item in it.results) {
+                                val image = if (item.multimedia.isNotEmpty()) {
+                                    item.multimedia[3].url }
+                                else { null }
+                                val sportsNews = SportsNews( title = item.title,
+                                        abstract = item.abstract,
+                                        byline = item.byline,
+                                        publishedDate = item.published_date,
+                                        image = image)
+                                Log.e("from API", "$sportsNews")
+//                                saveNewsToDB(SportsNews::class.java, sportsNews)
+                            }
+                        },
+                        {
+                            Log.e("from inside API", "$it")
+                            it.printStackTrace()
+                        })
+        return database?.getDao()?.getAllSportsNews()
     }
 
-    private fun <T: RealmObject>saveItemToRealmDB(objectClass: Class<T>, item: Result) {
-        realmAsyncTask = db.executeTransactionAsync({ realmDB ->
-            val generatedObject = realmDB.createObject(objectClass)
-            when(generatedObject) {
-                is HomeNews -> {
-                        (generatedObject as HomeNews).apply {
-                        abstract = item.abstract
-                        title = item.title
-                        byline = item.byline
-                        publishedDate = item.published_date
-                        image = if (item.multimedia.isNotEmpty()) {
-                            item.multimedia[3].url
-                        } else { null }
-                    }
-                }
-                is FoodNews -> {
-                    (generatedObject as FoodNews).apply {
-                        abstract = item.abstract
-                        title = item.title
-                        byline = item.byline
-                        publishedDate = item.published_date
-                        image = if (item.multimedia.isNotEmpty()) {
-                            item.multimedia[3].url
-                        } else { null }
-                    }
-                }
-                is SportsNews -> {
-                    (generatedObject as SportsNews).apply {
-                        abstract = item.abstract
-                        title = item.title
-                        byline = item.byline
-                        publishedDate = item.published_date
-                        image = if (item.multimedia.isNotEmpty()) {
-                            item.multimedia[3].url
-                        } else { null }
-                    }
-                }
-            }
-            closeDB()
-        }, { Log.e("News Realm Success", "saved") }, { Log.e("News Realm Error", "${it.message}") })
-    }
+    private fun saveNewsToDB(item: HomeNews ) = database?.getDao()?.saveHomeNews(item)
 
-    private fun <T : RealmModel?> removePreviousDataFromRealmDB(clazz: Class<T>) {
-        val result = db.where(clazz).findAll()
-        db.beginTransaction()
-        val resp = result.deleteAllFromRealm()
-        db.commitTransaction()
-        Log.e("delete success?", "$resp")
-    }
+//    private fun <T> saveNewsToDB(clazz: Class<T>, item: T ) {
+//        when (clazz) {
+//            is HomeNews -> { database?.getDao()?.saveHomeNews(item as HomeNews) }
+//            is SportsNews -> { database?.getDao()?.saveSportsNews(item as SportsNews) }
+//            is FoodNews -> { database?.getDao()?.saveFoodNews(item as FoodNews) }
+//        }
+//
+//    }
 
     fun clearDisposable() = disposable?.dispose()
-
-    private fun closeDB() = if (db.isClosed) { } else db.close()
-
-    fun clearAsyncTask() {
-        realmAsyncTask?.let {
-            if (!it.isCancelled) it.cancel()
-        }
-    }
 
 }

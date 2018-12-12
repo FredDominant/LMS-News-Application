@@ -67,10 +67,10 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun makeAPICall() {
         if (NetworkConnectivity(activity!!).isConnected()) {
             binding.display = true
-             viewModel.getDataFromAPI(FOOD, {
-                 foodResponse = it
-                 foodAdapter.update(it.results)
-             })
+//             viewModel.getDataFromAPI(FOOD, {
+//                 foodResponse = it
+//                 foodAdapter.update(it.results)
+//             })
         } else {
             displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
     }

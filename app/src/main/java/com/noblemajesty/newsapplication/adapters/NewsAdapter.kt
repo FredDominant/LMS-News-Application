@@ -9,7 +9,7 @@ import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.databinding.NewsRowItemBinding
 import io.realm.RealmObject
 
-class NewsAdapter <T: RealmObject>(): RecyclerView.Adapter<NewsViewHolder<T>>() {
+class NewsAdapter <T>: RecyclerView.Adapter<NewsViewHolder<T>>() {
 
     lateinit var binding: NewsRowItemBinding
     private val listItems = mutableListOf<T>()
