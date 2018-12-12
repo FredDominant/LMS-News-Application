@@ -1,7 +1,8 @@
 package com.noblemajesty.newsapplication.utils
 
 object Constants {
-    val HOME_NEWS = "homeNews"
-    val SPORTS = "sports"
-    val FOOD = "food"
+    const val HOME_NEWS = "homeNews"
+    const val SPORTS = "sports"
+    const val FOOD = "food"
+    const val DB_NAME = "newsApplicationDatabase"
 }
