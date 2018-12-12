@@ -1,23 +1,24 @@
 package com.noblemajesty.newsapplication.views
 
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.noblemajesty.newsapplication.R
-import com.noblemajesty.newsapplication.adapters.Adapter
+import com.noblemajesty.newsapplication.adapters.NewsAdapter
 import com.noblemajesty.newsapplication.databinding.FragmentFoodBinding
 import com.noblemajesty.newsapplication.models.NYTimesResponse
+import com.noblemajesty.newsapplication.utils.Constants.FOOD
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
-import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel.Companion.FOOD
 import kotlinx.android.synthetic.main.activity_news.*
 
 /**
@@ -29,7 +30,7 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var binding: FragmentFoodBinding
     private lateinit var viewModel: NewsActivityViewModel
     private lateinit var foodResponse: NYTimesResponse
-    private val foodAdapter by lazy { Adapter() }
+    private val foodAdapter by lazy { NewsAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,25 +59,22 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun getData() {
-        viewModel.food?.let {
-            foodResponse = it
-            foodAdapter.update(it.results)
-        } ?: makeAPICall()
-    }
-
-    private fun makeAPICall() {
-        if (NetworkConnectivity(activity!!).isConnected()) {
-            binding.display = true
-//             viewModel.getDataFromAPI(FOOD, {
-//                 foodResponse = it
-//                 foodAdapter.update(it.results)
-//             })
-        } else {
-            displaySnackbar(activity!!.newsActivity, "No internet connection", ::makeAPICall) }
+        if (!NetworkConnectivity(activity!!).isConnected()) {
+            displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
+        }
+        viewModel.getNews(FOOD)?.observe(this, Observer {
+            it.let { foodNews ->
+                if (foodNews?.isNotEmpty()!!) {
+                    foodAdapter.updateList(foodNews)
+                    binding.display = false
+                    Log.e("LiveData", "${foodNews.size}")
+                } else { Log.e("Empty!!!", "Empty!!!") }
+            }
+        })
     }
 
     override fun onRefresh() {
-        onSwipeRefresh(binding.foodSwipeRefresh) { makeAPICall() }
+        onSwipeRefresh(binding.foodSwipeRefresh) { getData() }
     }
 
     override fun onDestroy() {

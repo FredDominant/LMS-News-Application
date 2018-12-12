@@ -1,7 +1,6 @@
 package com.noblemajesty.newsapplication.views
 
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.databinding.DataBindingUtil
@@ -15,8 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.NewsAdapter
-import com.noblemajesty.newsapplication.database.models.HomeNews
 import com.noblemajesty.newsapplication.databinding.FragmentNewsBinding
+import com.noblemajesty.newsapplication.utils.Constants.HOME_NEWS
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
 import kotlinx.android.synthetic.main.activity_news.*
@@ -30,7 +29,7 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: FragmentNewsBinding
     private lateinit var viewModel: NewsActivityViewModel
-    private val newsAdapter by lazy { NewsAdapter<HomeNews>() }
+    private val newsAdapter by lazy { NewsAdapter() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +66,7 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if (!NetworkConnectivity(activity!!).isConnected()) {
             displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
         }
-        viewModel.getHomeNews()?.observe(this, Observer {
+        viewModel.getNews(HOME_NEWS)?.observe(this, Observer {
             it.let { homeNews ->
                 if (homeNews?.isNotEmpty()!!) {
                     newsAdapter.updateList(homeNews)
@@ -80,6 +79,6 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onDestroy() {
         super.onDestroy()
-//        viewModel.clearDisposable()
+        viewModel.clearDisposable()
     }
 }
