@@ -6,15 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
+import com.noblemajesty.newsapplication.database.News
 import com.noblemajesty.newsapplication.databinding.NewsRowItemBinding
-import io.realm.RealmObject
 
-class NewsAdapter <T>: RecyclerView.Adapter<NewsViewHolder<T>>() {
+class NewsAdapter: RecyclerView.Adapter<NewsViewHolder>() {
 
     lateinit var binding: NewsRowItemBinding
-    private val listItems = mutableListOf<T>()
+    private val listItems = mutableListOf<News>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder<T> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         binding = DataBindingUtil.inflate(inflater, R.layout.news_row_item, parent, false)
         return NewsViewHolder(binding)
@@ -25,12 +25,12 @@ class NewsAdapter <T>: RecyclerView.Adapter<NewsViewHolder<T>>() {
         return listItems.size
     }
 
-    override fun onBindViewHolder(holder: NewsViewHolder<T>, position: Int) {
+    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         Log.e("inside Bind Viewholder", "$position")
         holder.setValues(listItems[position])
     }
 
-    fun updateList(updates: List<T>) {
+    fun updateList(updates: List<News>) {
         listItems.clear()
         listItems.addAll(updates)
         notifyDataSetChanged()
