@@ -14,10 +14,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.NewsAdapter
+import com.noblemajesty.newsapplication.database.News
 import com.noblemajesty.newsapplication.databinding.FragmentNewsBinding
+import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.Constants.HOME_NEWS
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_news.*
 
 
@@ -30,6 +34,7 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var binding: FragmentNewsBinding
     private lateinit var viewModel: NewsActivityViewModel
     private val newsAdapter by lazy { NewsAdapter() }
+    private var disposable: Disposable? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,22 +68,39 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun getData() {
+        // Show progressbar
+        // Fetch data from db, if not empty hide progressbar
+        // On background, fetch data from server and save response to db
+        // on complete saving to db, update screen with the item (switch thread)
         if (!NetworkConnectivity(activity!!).isConnected()) {
             displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
         }
-        viewModel.getNews(HOME_NEWS)?.observe(this, Observer {
-            it.let { homeNews ->
-                if (homeNews?.isNotEmpty()!!) {
-                    newsAdapter.updateList(homeNews)
-                    binding.display = false
-                    Log.e("LiveData", "${homeNews.size}")
-                } else { Log.e("Empty!!!", "Empty!!!") }
+//        val cache = loadFromDB()
+        viewModel.fetchNewsFromDataBase(HOME_NEWS)
+        viewModel.newsArray.observe(this, Observer {
+            it?.let { newsList ->
+                Log.e("News Size", "${newsList.size}")
             }
         })
+        /*if (cache.isEmpty()) {
+            disposable = viewModel.getNews(HOME_NEWS)?.subscribe({
+                viewModel.saveNewsToDB(it.results, HOME_NEWS)
+                val results = viewModel.fetchNewsFromDataBase(HOME_NEWS)
+                Log.e("from Fragment", "${results.size}")
+            },{})
+        } else {
+
+        }*/
+
     }
+
+//    private fun loadFromDB(): ArrayList<News> {
+//        return viewModel.fetchNewsFromDataBase(HOME_NEWS)
+//    }
 
     override fun onDestroy() {
         super.onDestroy()
+        disposable?.dispose()
         viewModel.clearDisposable()
     }
 }

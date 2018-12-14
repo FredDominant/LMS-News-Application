@@ -29,7 +29,6 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var binding: FragmentFoodBinding
     private lateinit var viewModel: NewsActivityViewModel
-    private lateinit var foodResponse: NYTimesResponse
     private val foodAdapter by lazy { NewsAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,15 +61,7 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if (!NetworkConnectivity(activity!!).isConnected()) {
             displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
         }
-        viewModel.getNews(FOOD)?.observe(this, Observer {
-            it.let { foodNews ->
-                if (foodNews?.isNotEmpty()!!) {
-                    foodAdapter.updateList(foodNews)
-                    binding.display = false
-                    Log.e("LiveData", "${foodNews.size}")
-                } else { Log.e("Empty!!!", "Empty!!!") }
-            }
-        })
+        viewModel.getNews(FOOD)
     }
 
     override fun onRefresh() {

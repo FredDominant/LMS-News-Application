@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,12 +64,7 @@ class SportsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if (!NetworkConnectivity(activity!!).isConnected()) {
             displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
         }
-        viewModel.getNews(SPORTS)?.observe(this, Observer {
-            it.let { sportsNews ->
-                sportsAdapter.updateList(sportsNews!!)
-                binding.display = false
-            }
-        })
+        viewModel.getNews(SPORTS)
     }
 
     override fun onDestroy() {

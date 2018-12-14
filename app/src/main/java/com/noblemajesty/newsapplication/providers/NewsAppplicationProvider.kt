@@ -23,11 +23,6 @@ class NewsAppplicationProvider: ContentProvider() {
 
 
     override fun onCreate(): Boolean {
-        newsApplicationDataBase = Room.databaseBuilder(context,
-                NewsApplicationDataBase::class.java,
-                DB_NAME).build()
-
-        newsApplicationDAO = newsApplicationDataBase.getDao()
         return true
     }
 

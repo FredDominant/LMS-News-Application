@@ -5,7 +5,6 @@ import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.noblemajesty.newsapplication.R
-import com.noblemajesty.newsapplication.database.NewsApplicationDataBase
 import com.noblemajesty.newsapplication.databinding.ActivityNewsBinding
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
 
@@ -26,7 +25,6 @@ class NewsActivity : AppCompatActivity() {
     }
 
     private fun initializeBottomNavigationBar() {
-        viewModel.database = NewsApplicationDataBase.getDatabaseInstance(this)
         binding.bottomNavigationBar.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.news -> { goToFragment(NewsFragment());true }
