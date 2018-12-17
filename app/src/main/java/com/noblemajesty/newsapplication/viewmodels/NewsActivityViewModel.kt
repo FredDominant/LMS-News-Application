@@ -3,6 +3,7 @@ package com.noblemajesty.newsapplication.viewmodels
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.ViewModel
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.net.Uri
@@ -31,14 +32,14 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import java.lang.Exception
 
-class NewsActivityViewModel(application: Application): AndroidViewModel(application) {
-    private var disposable: Disposable? = null
+open class NewsActivityViewModel: ViewModel() {
+    var disposable: Disposable? = null
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
     val newsArray = MutableLiveData<ArrayList<News>>()
     var contentResolver: ContentResolver? = null
 
-    private fun getNews(newsType: String): Observable<NYTimesResponse>? {
+    fun getNews(newsType: String): Observable<NYTimesResponse>? {
         var observable: Observable<NYTimesResponse>? = null
         when (newsType) {
             HOME_NEWS -> { observable = retrofitInstance.getNews() }
@@ -93,7 +94,7 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
                 }, {})
     }
 
-    private fun Result.toNews(): News {
+    fun Result.toNews(): News {
         val stuff = this
         return News().apply {
             title = stuff.title
@@ -106,7 +107,7 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
 
     fun clearDisposable() = disposable?.dispose()
 
-    private fun saveWithContentProvider(uri: Uri, contentValues: ContentValues) {
+    fun saveWithContentProvider(uri: Uri, contentValues: ContentValues) {
         try {
             val uri = contentResolver?.insert(uri, contentValues)
         } catch (error: Exception) {
@@ -114,7 +115,7 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
-    private fun saveNewsToDBWithContentProvider(data: List<Result>, newsType: String) {
+    fun saveNewsToDBWithContentProvider(data: List<Result>, newsType: String) {
         data.map {
             val contentValues = ContentValues().apply {
                 put(COLUMN_TITLE, it.title)
