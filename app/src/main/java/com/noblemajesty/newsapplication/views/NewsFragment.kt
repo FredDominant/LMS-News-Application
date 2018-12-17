@@ -14,13 +14,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.NewsAdapter
-import com.noblemajesty.newsapplication.database.News
 import com.noblemajesty.newsapplication.databinding.FragmentNewsBinding
-import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.Constants.HOME_NEWS
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
-import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_news.*
 
@@ -75,28 +72,17 @@ class NewsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if (!NetworkConnectivity(activity!!).isConnected()) {
             displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
         }
-//        val cache = loadFromDB()
         viewModel.fetchNewsFromDataBase(HOME_NEWS)
         viewModel.newsArray.observe(this, Observer {
             it?.let { newsList ->
+                if (!newsList.isEmpty()) {
+                    newsAdapter.updateList(it)
+                    binding.display = false
+                }
                 Log.e("News Size", "${newsList.size}")
             }
         })
-        /*if (cache.isEmpty()) {
-            disposable = viewModel.getNews(HOME_NEWS)?.subscribe({
-                viewModel.saveNewsToDB(it.results, HOME_NEWS)
-                val results = viewModel.fetchNewsFromDataBase(HOME_NEWS)
-                Log.e("from Fragment", "${results.size}")
-            },{})
-        } else {
-
-        }*/
-
     }
-
-//    private fun loadFromDB(): ArrayList<News> {
-//        return viewModel.fetchNewsFromDataBase(HOME_NEWS)
-//    }
 
     override fun onDestroy() {
         super.onDestroy()

@@ -22,8 +22,8 @@
       </intent-filter>
     </activity>
     <provider
-      android:authorities="com.noblemajesty.newsapplication.providers.NewsAppplicationProvider"
-      android:name=".providers.NewsAppplicationProvider"
+      android:authorities="com.noblemajesty.newsapplication.providers.NewsApplicationProvider"
+      android:name=".providers.NewsApplicationProvider"
       android:exported="false"/>
   </application>
 

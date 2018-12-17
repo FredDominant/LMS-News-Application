@@ -16,6 +16,7 @@ import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.NewsAdapter
 import com.noblemajesty.newsapplication.databinding.FragmentFoodBinding
 import com.noblemajesty.newsapplication.models.NYTimesResponse
+import com.noblemajesty.newsapplication.utils.Constants
 import com.noblemajesty.newsapplication.utils.Constants.FOOD
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
@@ -61,7 +62,16 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if (!NetworkConnectivity(activity!!).isConnected()) {
             displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
         }
-        viewModel.getNews(FOOD)
+        viewModel.fetchNewsFromDataBase(Constants.FOOD)
+        viewModel.newsArray.observe(this, Observer {
+            it?.let { newsList ->
+                if (!newsList.isEmpty()) {
+                    foodAdapter.updateList(it)
+                    binding.display = false
+                }
+                Log.e("News Size", "${newsList.size}")
+            }
+        })
     }
 
     override fun onRefresh() {
