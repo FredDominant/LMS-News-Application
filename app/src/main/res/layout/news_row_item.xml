@@ -48,40 +48,41 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
         android:text="@{title}"
         android:textAlignment="textStart"
         android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/newsImage"
         tools:text="Democrats Capture Control of House; G.O.P. Holds Senate"/>
 
-      <!--<TextView-->
-      <!--android:id="@+id/newsAbstractField"-->
-      <!--android:layout_width="wrap_content"-->
-      <!--android:layout_height="wrap_content"-->
-      <!--android:layout_marginTop="4dp"-->
-      <!--android:layout_marginEnd="8dp"-->
-      <!--android:text="@{newsAbstract}"-->
-      <!--android:textAlignment="textStart"-->
-      <!--android:textSize="14sp"-->
-      <!--app:layout_constraintEnd_toEndOf="@+id/newsTitle"-->
-      <!--app:layout_constraintStart_toStartOf="@+id/newsTitle"-->
-      <!--app:layout_constraintTop_toBottomOf="@+id/newsTitle"-->
-      <!--tools:text="Republicans were on track to add to their Senate majority, defeating Democratic senators and holding onto Texas by beating back Representative Beto O’Rourke"/>-->
+      <TextView
+        android:id="@+id/newsAbstractField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:text="@{newsAbstract}"
+        android:textAlignment="textStart"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/newsTitle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/newsTitle"
+        app:layout_constraintTop_toBottomOf="@+id/newsTitle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Republicans were on track to add to their Senate majority, defeating Democratic senators and holding onto Texas by beating back Representative Beto O’Rourke"/>
 
       <TextView
         android:id="@+id/news_publish_date"
         android:layout_width="wrap_content"
         android:layout_height="14dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:text="@{publishedDate}"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/newsJournalist"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/newsTitle"
+        app:layout_constraintStart_toStartOf="@+id/newsJournalist"
         app:layout_constraintTop_toBottomOf="@+id/newsJournalist"
         tools:text="Nov.7, 2018"/>
 
@@ -92,11 +93,15 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:text="@{byline}"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/newsTitle"
-        app:layout_constraintTop_toBottomOf="@+id/newsTitle"
+        app:layout_constraintEnd_toEndOf="@+id/newsAbstractField"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/newsAbstractField"
+        app:layout_constraintTop_toBottomOf="@+id/newsAbstractField"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="By JONATHAN MARTIN and ALEXANDER BURN"/>
     </android.support.constraint.ConstraintLayout>
 
