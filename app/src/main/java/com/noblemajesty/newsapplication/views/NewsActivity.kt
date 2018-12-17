@@ -1,6 +1,7 @@
 package com.noblemajesty.newsapplication.views
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.ContentResolver
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -20,36 +21,25 @@ class NewsActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, NewsFragment())
                 .commit()
-        initializeBottomNavigationBar()
         viewModel = ViewModelProviders.of(this).get(NewsActivityViewModel::class.java)
+        viewModel.contentResolver = contentResolver
+        initializeBottomNavigationBar()
     }
 
     private fun initializeBottomNavigationBar() {
         binding.bottomNavigationBar.setOnNavigationItemSelectedListener {
             when(it.itemId) {
-                R.id.news -> { goToNews();true }
-                R.id.sports -> { goToSports(); true }
-                R.id.food -> { goToFood(); true }
+                R.id.news -> { goToFragment(NewsFragment());true }
+                R.id.sports -> { goToFragment(SportsFragment()); true }
+                R.id.food -> { goToFragment(FoodFragment()); true }
                 else -> true
             }
         }
     }
 
-    private fun goToNews() {
+    private fun goToFragment(fragment: BaseFragment) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, NewsFragment())
-                .commit()
-    }
-
-    private fun goToSports() {
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, SportsFragment())
-                .commit()
-    }
-
-    private fun goToFood() {
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, FoodFragment())
+                .replace(R.id.fragmentContainer, fragment)
                 .commit()
     }
 

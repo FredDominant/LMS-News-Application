@@ -6,83 +6,105 @@
 
   <data>
     <variable
-      name="data"
-      type="com.noblemajesty.newsapplication.models.Result"/>
+      name="title"
+      type="String"/>
+    <variable
+      name="newsAbstract"
+      type="String"/>
+    <variable
+      name="publishedDate"
+      type="String"/>
+    <variable
+      name="byline"
+      type="String"/>
+    <variable
+      name="image"
+      type="String"/>
   </data>
-    <android.support.v7.widget.CardView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="20dp"
-      app:cardElevation="5dp"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
+  <android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    app:cardElevation="5dp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-      <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+    <android.support.constraint.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:padding="10dp">
 
       <ImageView
         android:id="@+id/newsImage"
         android:layout_width="match_parent"
         android:layout_height="242dp"
+        imageUrl="@{image}"
         app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
-          android:id="@+id/newsTitle"
-          android:textStyle="bold"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:layout_marginEnd="16dp"
-          android:text="@{data.title}"
-          android:textAlignment="textStart"
-          android:textSize="22sp"
-          app:layout_constraintEnd_toEndOf="@+id/newsAbstract"
-          app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/newsImage"
-          tools:text="Democrats Capture Control of House; G.O.P. Holds Senate"/>
+      <TextView
+        android:id="@+id/newsTitle"
+        android:textStyle="bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@{title}"
+        android:textAlignment="textStart"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newsImage"
+        tools:text="Democrats Capture Control of House; G.O.P. Holds Senate"/>
 
-        <TextView
-          android:id="@+id/newsAbstract"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="4dp"
-          android:layout_marginEnd="8dp"
-          android:text="@{data.abstract}"
-          android:textAlignment="textStart"
-          android:textSize="14sp"
-          app:layout_constraintEnd_toEndOf="@+id/newsTitle"
-          app:layout_constraintStart_toStartOf="@+id/newsTitle"
-          app:layout_constraintTop_toBottomOf="@+id/newsTitle"
-          tools:text="Republicans were on track to add to their Senate majority, defeating Democratic senators and holding onto Texas by beating back Representative Beto O’Rourke"/>
+      <TextView
+        android:id="@+id/newsAbstractField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:text="@{newsAbstract}"
+        android:textAlignment="textStart"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/newsTitle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/newsTitle"
+        app:layout_constraintTop_toBottomOf="@+id/newsTitle"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Republicans were on track to add to their Senate majority, defeating Democratic senators and holding onto Texas by beating back Representative Beto O’Rourke"/>
 
-        <TextView
-          android:id="@+id/news_publish_date"
-          android:layout_width="wrap_content"
-          android:layout_height="14dp"
-          android:layout_marginTop="8dp"
-          android:text="@{data.published_date}"
-          android:textSize="10sp"
-          app:layout_constraintStart_toStartOf="@+id/newsTitle"
-          app:layout_constraintTop_toBottomOf="@+id/newsAbstract"
-          tools:text="Nov.7, 2018"/>
+      <TextView
+        android:id="@+id/news_publish_date"
+        android:layout_width="wrap_content"
+        android:layout_height="14dp"
+        android:layout_marginTop="8dp"
+        android:textSize="10sp"
+        formatTime="@{publishedDate}"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/newsJournalist"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/newsJournalist"
+        app:layout_constraintTop_toBottomOf="@+id/newsJournalist"
+        tools:text="Nov.7, 2018"/>
 
-        <TextView
-          android:id="@+id/newsJournalist"
-          android:textStyle="bold"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:layout_marginBottom="8dp"
-          android:text="@{data.byline}"
-          android:textSize="10sp"
-          app:layout_constraintBottom_toBottomOf="parent"
-          app:layout_constraintStart_toStartOf="@+id/newsTitle"
-          app:layout_constraintTop_toBottomOf="@+id/news_publish_date"
-          tools:text="By JONATHAN MARTIN and ALEXANDER BURN"/>
+      <TextView
+        android:id="@+id/newsJournalist"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@{byline}"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/newsAbstractField"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/newsAbstractField"
+        app:layout_constraintTop_toBottomOf="@+id/newsAbstractField"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="By JONATHAN MARTIN and ALEXANDER BURN"/>
     </android.support.constraint.ConstraintLayout>
 
-    </android.support.v7.widget.CardView>
+  </android.support.v7.widget.CardView>
 </layout>

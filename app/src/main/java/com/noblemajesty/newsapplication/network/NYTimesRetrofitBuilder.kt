@@ -1,10 +1,10 @@
 package com.noblemajesty.newsapplication.network
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.experimental.CoroutineCallAdapterFactory
 import com.noblemajesty.newsapplication.utils.Secret.Companion.apiKey
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class NYTimesRetrofitBuilder {
@@ -37,7 +37,7 @@ class NYTimesRetrofitBuilder {
             baseUrl(BASE_URL)
             client(getOkHttpClient())
             addConverterFactory(GsonConverterFactory.create())
-            addCallAdapterFactory(CoroutineCallAdapterFactory())
+            addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         }
         return retrofitBuilder.build()
     }
