@@ -18,8 +18,7 @@ class NewsApplicationProvider: ContentProvider() {
     companion object {
         private const val CONTENT_AUTHORITY = "com.noblemajesty.newsapplication.providers.NewsApplicationProvider"
         private val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
-        val CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, TABLE_NAME)
-        // content://com.noblemajesty.newsapplication.providers.NewsApplicationProvider/News
+        val CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, TABLE_NAME)!!
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
         private const val ALL_NEWS = 1
@@ -33,8 +32,6 @@ class NewsApplicationProvider: ContentProvider() {
         }
     }
 
-
-
     override fun onCreate(): Boolean {
         database = NewsApplicationDataBase(context!!)
         return true
@@ -44,20 +41,15 @@ class NewsApplicationProvider: ContentProvider() {
         Log.e("Uri is", "$uri")
         return when (uriMatcher.match(uri)) {
             SPECIFIC_NEWS_TYPE -> { saveToDB(uri, values) }
-            else -> { throw IllegalArgumentException("What the fuck is this? ")}
+            else -> { throw IllegalArgumentException("What the fuck is this? ") }
         }
      }
 
-    private fun saveToDB(uri: Uri, values: ContentValues?): Uri? {
-        val type = uri.lastPathSegment
-        val db = database.writableDatabase
-        val row = db.insert(NewsApplicationDataBase.TABLE_NAME, null, values)
-        if (row.toInt() == -1) return null
-        return ContentUris.withAppendedId(uri, row)
-    }
-
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
-        return null
+        return when (uriMatcher.match(uri)) {
+            SPECIFIC_NEWS_TYPE -> { fetchAllNewsOfSpecificType(uri.lastPathSegment) }
+            else -> { throw IllegalArgumentException("What the fuck is this? ") }
+        }
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
@@ -70,6 +62,27 @@ class NewsApplicationProvider: ContentProvider() {
 
     override fun getType(uri: Uri): String? {
         return null
+    }
+
+    private fun fetchAllNewsOfSpecificType(lastPathSegment: String?): Cursor? {
+        var allNews: Cursor? = null
+        lastPathSegment?.let{ newsType ->
+            val db = database.readableDatabase
+            allNews = db.query(NewsApplicationDataBase.TABLE_NAME,
+                    NewsApplicationDataBase.TABLE_ROWS,
+                    "${NewsApplicationDataBase.COLUMN_NEWS_TYPE} = ?",
+                    arrayOf(newsType),
+                    null, null, "" +
+                    "${NewsApplicationDataBase.COLUMN_ID} ASC")
+        }
+        return allNews
+    }
+
+    private fun saveToDB(uri: Uri, values: ContentValues?): Uri? {
+        val db = database.writableDatabase
+        val row = db.insert(NewsApplicationDataBase.TABLE_NAME, null, values)
+        if (row.toInt() == -1) return null
+        return ContentUris.withAppendedId(uri, row)
     }
 
 }

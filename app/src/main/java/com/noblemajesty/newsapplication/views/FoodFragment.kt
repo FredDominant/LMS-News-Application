@@ -8,16 +8,13 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.NewsAdapter
 import com.noblemajesty.newsapplication.databinding.FragmentFoodBinding
-import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.utils.Constants
-import com.noblemajesty.newsapplication.utils.Constants.FOOD
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
 import kotlinx.android.synthetic.main.activity_news.*
@@ -69,7 +66,6 @@ class FoodFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
                     foodAdapter.updateList(it)
                     binding.display = false
                 }
-                Log.e("News Size", "${newsList.size}")
             }
         })
     }

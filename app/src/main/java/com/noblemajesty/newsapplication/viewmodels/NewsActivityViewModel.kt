@@ -101,10 +101,13 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
         Log.e("called", "calledddddddddddd")
         disposable = Flowable.fromCallable<ArrayList<News>> {
             val allNews = ArrayList<News>()
-            val cursor = sqliteDataBase
-                    .readableDatabase.query(NewsApplicationDataBase.TABLE_NAME,
-                    NewsApplicationDataBase.TABLE_ROWS, "$COLUMN_NEWS_TYPE = ?",
-                    arrayOf(newsType), null, null, "$COLUMN_ID ASC")
+//            val cursor = sqliteDataBase
+//                    .readableDatabase.query(NewsApplicationDataBase.TABLE_NAME,
+//                    NewsApplicationDataBase.TABLE_ROWS, "$COLUMN_NEWS_TYPE = ?",
+//                    arrayOf(newsType), null, null, "$COLUMN_ID ASC")
+            val cursor = contentResolver?.query(Uri.parse("$CONTENT_URI/$newsType"),
+                    NewsApplicationDataBase.TABLE_ROWS, null, null, null
+                    )
 
             cursor?.let {
                 while (it.moveToNext()) {
@@ -151,7 +154,8 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
 //                    it.results.map { it.toContentValue() }
                 }
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe({
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
                     newsArray.value = ArrayList(it)
                 }, {})
     }
@@ -171,42 +175,39 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
 
     private fun saveWithContentProvider(uri: Uri, contentValues: ContentValues) {
         Log.e("content resolver", "$contentResolver")
-//        contentResolver?.let { contentResolver ->
         try {
             val uri = contentResolver?.insert(uri, contentValues)
             Log.e("URI In ViewModel", "$uri")
         } catch (error: Exception) {
             error.printStackTrace()
         }
+    }
 
+//    private fun Result.toContentValue(newsType: String): ContentValues {
+//        val item = this
+//        return ContentValues().apply {
+//            put(COLUMN_TITLE, title)
+//            put(COLUMN_ABSTRACT, abstract)
+//            put(COLUMN_BYLINE, byline)
+//            put(COLUMN_PUBLISHED_DATE, published_date)
+//            put(COLUMN_IMAGE, if (item.multimedia.isNotEmpty()) item.multimedia[3].url else null)
+//            put(COLUMN_NEWS_TYPE, newsType)
 //        }
-    }
-
-    private fun Result.toContentValue(newsType: String): ContentValues {
-        val item = this
-        return ContentValues().apply {
-            put(COLUMN_TITLE, title)
-            put(COLUMN_ABSTRACT, abstract)
-            put(COLUMN_BYLINE, byline)
-            put(COLUMN_PUBLISHED_DATE, published_date)
-            put(COLUMN_IMAGE, if (item.multimedia.isNotEmpty()) item.multimedia[3].url else null)
-            put(COLUMN_NEWS_TYPE, newsType)
-        }
-    }
+//    }
 
     private fun saveNewsToDBWithContentProvider(data: List<Result>, newsType: String) {
-            data.map {
-                val contentValues = ContentValues().apply {
-                    put(COLUMN_TITLE, it.title)
-                    put(COLUMN_ABSTRACT, it.abstract)
-                    put(COLUMN_BYLINE, it.byline)
-                    put(COLUMN_PUBLISHED_DATE, it.published_date)
-                    put(COLUMN_IMAGE, if (it.multimedia.isNotEmpty()) { it.multimedia[3].url } else { null })
-                    put(COLUMN_NEWS_TYPE, newsType)
-                }
-                Log.e("saveWithContentProvider", "Hereeeeeeeeeeeeee")
-                saveWithContentProvider( Uri.parse("$CONTENT_URI/$newsType"), contentValues)
+        data.map {
+            val contentValues = ContentValues().apply {
+                put(COLUMN_TITLE, it.title)
+                put(COLUMN_ABSTRACT, it.abstract)
+                put(COLUMN_BYLINE, it.byline)
+                put(COLUMN_PUBLISHED_DATE, it.published_date)
+                put(COLUMN_IMAGE, if (it.multimedia.isNotEmpty()) { it.multimedia[3].url } else { null })
+                put(COLUMN_NEWS_TYPE, newsType)
             }
+            Log.e("saveWithContentProvider", "Hereeeeeeeeeeeeee")
+            saveWithContentProvider( Uri.parse("$CONTENT_URI/$newsType"), contentValues)
         }
+    }
 }
 

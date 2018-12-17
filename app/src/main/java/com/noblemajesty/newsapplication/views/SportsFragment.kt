@@ -8,14 +8,12 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.noblemajesty.newsapplication.R
 import com.noblemajesty.newsapplication.adapters.NewsAdapter
 import com.noblemajesty.newsapplication.databinding.FragmentSportsBinding
-import com.noblemajesty.newsapplication.utils.Constants
 import com.noblemajesty.newsapplication.utils.Constants.SPORTS
 import com.noblemajesty.newsapplication.utils.NetworkConnectivity
 import com.noblemajesty.newsapplication.viewmodels.NewsActivityViewModel
@@ -65,14 +63,13 @@ class SportsFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener {
         if (!NetworkConnectivity(activity!!).isConnected()) {
             displaySnackbar(activity!!.newsActivity, "check you internet", ::getData)
         }
-        viewModel.fetchNewsFromDataBase(Constants.SPORTS)
+        viewModel.fetchNewsFromDataBase(SPORTS)
         viewModel.newsArray.observe(this, Observer {
             it?.let { newsList ->
                 if (!newsList.isEmpty()) {
                     sportsAdapter.updateList(it)
                     binding.display = false
                 }
-                Log.e("News Size", "${newsList.size}")
             }
         })
     }
