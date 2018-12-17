@@ -21,12 +21,10 @@ class NewsAdapter: RecyclerView.Adapter<NewsViewHolder>() {
     }
 
     override fun getItemCount() :Int {
-        Log.e("inside Adapter Count", "${listItems.size}")
         return listItems.size
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        Log.e("inside Bind Viewholder", "$position")
         holder.setValues(listItems[position])
     }
 
