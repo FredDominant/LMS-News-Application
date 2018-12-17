@@ -1,6 +1,7 @@
 package com.noblemajesty.newsapplication.views
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.ContentResolver
 import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -21,6 +22,7 @@ class NewsActivity : AppCompatActivity() {
                 .add(R.id.fragmentContainer, NewsFragment())
                 .commit()
         viewModel = ViewModelProviders.of(this).get(NewsActivityViewModel::class.java)
+        viewModel.contentResolver = contentResolver
         initializeBottomNavigationBar()
     }
 

@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.UriMatcher
 import android.database.Cursor
 import android.net.Uri
+import android.util.Log
 import com.noblemajesty.newsapplication.database.NewsApplicationDataBase
 import com.noblemajesty.newsapplication.database.NewsApplicationDataBase.Companion.TABLE_NAME
 import java.lang.IllegalArgumentException
@@ -17,7 +18,7 @@ class NewsApplicationProvider: ContentProvider() {
     companion object {
         private const val CONTENT_AUTHORITY = "com.noblemajesty.newsapplication.providers.NewsApplicationProvider"
         private val BASE_CONTENT_URI = Uri.parse("content://$CONTENT_AUTHORITY")
-        private val CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, TABLE_NAME)
+        val CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, TABLE_NAME)
         // content://com.noblemajesty.newsapplication.providers.NewsApplicationProvider/News
         private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
@@ -40,6 +41,7 @@ class NewsApplicationProvider: ContentProvider() {
     }
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
+        Log.e("Uri is", "$uri")
         return when (uriMatcher.match(uri)) {
             SPECIFIC_NEWS_TYPE -> { saveToDB(uri, values) }
             else -> { throw IllegalArgumentException("What the fuck is this? ")}

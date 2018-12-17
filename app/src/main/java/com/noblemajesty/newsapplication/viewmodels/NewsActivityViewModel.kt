@@ -3,7 +3,11 @@ package com.noblemajesty.newsapplication.viewmodels
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.net.Uri
 import android.util.Log
+import com.noblemajesty.newsapplication.R.id.news
 import com.noblemajesty.newsapplication.database.News
 import com.noblemajesty.newsapplication.database.NewsApplicationDataBase
 import com.noblemajesty.newsapplication.database.NewsApplicationDataBase.Companion.COLUMN_ABSTRACT
@@ -17,6 +21,7 @@ import com.noblemajesty.newsapplication.models.NYTimesResponse
 import com.noblemajesty.newsapplication.models.Result
 import com.noblemajesty.newsapplication.network.NYTimesRetrofitBuilder
 import com.noblemajesty.newsapplication.network.NYTimesService
+import com.noblemajesty.newsapplication.providers.NewsApplicationProvider.Companion.CONTENT_URI
 import com.noblemajesty.newsapplication.utils.Constants.FOOD
 import com.noblemajesty.newsapplication.utils.Constants.HOME_NEWS
 import com.noblemajesty.newsapplication.utils.Constants.SPORTS
@@ -26,6 +31,7 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.lang.Exception
 
 class NewsActivityViewModel(application: Application): AndroidViewModel(application) {
     private var disposable: Disposable? = null
@@ -33,6 +39,7 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
     private var retrofitInstance = NYTimesRetrofitBuilder.getInstance()
             .createService(NYTimesService::class.java)
     val newsArray = MutableLiveData<ArrayList<News>>()
+    var contentResolver: ContentResolver? = null
 
     fun getNews(newsType: String): Observable<NYTimesResponse>? {
         var observable: Observable<NYTimesResponse>? = null
@@ -133,11 +140,16 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
                 .doOnNext {
                     newsArray.value = it }
                 .flatMap {
-                    getNews(newsType)?.toFlowable(BackpressureStrategy.BUFFER) }
+                    getNews(newsType)?.toFlowable(BackpressureStrategy.BUFFER)
+                }
                 .doOnNext {
-                    saveNewsToDB(it.results, newsType) }
+//                    saveNewsToDB(it.results, newsType)
+                    saveNewsToDBWithContentProvider(it.results, newsType)
+                }
                 .map {
-                    it.results.map { it.toNews() } }
+                    it.results.map { it.toNews() }
+//                    it.results.map { it.toContentValue() }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe({
                     newsArray.value = ArrayList(it)
@@ -156,5 +168,45 @@ class NewsActivityViewModel(application: Application): AndroidViewModel(applicat
     }
 
     fun clearDisposable() = disposable?.dispose()
+
+    private fun saveWithContentProvider(uri: Uri, contentValues: ContentValues) {
+        Log.e("content resolver", "$contentResolver")
+//        contentResolver?.let { contentResolver ->
+        try {
+            val uri = contentResolver?.insert(uri, contentValues)
+            Log.e("URI In ViewModel", "$uri")
+        } catch (error: Exception) {
+            error.printStackTrace()
+        }
+
+//        }
+    }
+
+    private fun Result.toContentValue(newsType: String): ContentValues {
+        val item = this
+        return ContentValues().apply {
+            put(COLUMN_TITLE, title)
+            put(COLUMN_ABSTRACT, abstract)
+            put(COLUMN_BYLINE, byline)
+            put(COLUMN_PUBLISHED_DATE, published_date)
+            put(COLUMN_IMAGE, if (item.multimedia.isNotEmpty()) item.multimedia[3].url else null)
+            put(COLUMN_NEWS_TYPE, newsType)
+        }
+    }
+
+    private fun saveNewsToDBWithContentProvider(data: List<Result>, newsType: String) {
+            data.map {
+                val contentValues = ContentValues().apply {
+                    put(COLUMN_TITLE, it.title)
+                    put(COLUMN_ABSTRACT, it.abstract)
+                    put(COLUMN_BYLINE, it.byline)
+                    put(COLUMN_PUBLISHED_DATE, it.published_date)
+                    put(COLUMN_IMAGE, if (it.multimedia.isNotEmpty()) { it.multimedia[3].url } else { null })
+                    put(COLUMN_NEWS_TYPE, newsType)
+                }
+                Log.e("saveWithContentProvider", "Hereeeeeeeeeeeeee")
+                saveWithContentProvider( Uri.parse("$CONTENT_URI/$newsType"), contentValues)
+            }
+        }
 }
 
