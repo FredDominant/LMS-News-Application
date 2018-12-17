@@ -6,7 +6,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.net.Uri
-import android.util.Log
 import com.noblemajesty.newsapplication.database.News
 import com.noblemajesty.newsapplication.database.NewsApplicationDataBase
 import com.noblemajesty.newsapplication.database.NewsApplicationDataBase.Companion.COLUMN_ABSTRACT
