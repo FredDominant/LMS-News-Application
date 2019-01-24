@@ -20,7 +20,9 @@ The API doesn't provide the news details, so users currently only view Headlines
 3. [Retrofit](https://square.github.io/retrofit/)
 4. SQLite Database
 5. [Picasso](http://square.github.io/picasso/)
-6. Junit, Espresso and Mockito
+6. Content Providers
+7. Data binding
+8. Junit, Espresso and Mockito
 
 # Test
 1. To run Instrumented/UI tests, `./gradlew connectedAndroidTest`
