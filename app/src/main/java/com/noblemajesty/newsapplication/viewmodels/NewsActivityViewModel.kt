@@ -78,12 +78,10 @@ open class NewsActivityViewModel: ViewModel() {
                     getNews(newsType)?.toFlowable(BackpressureStrategy.BUFFER)
                 }
                 .doOnNext {
-//                    saveNewsToDB(it.results, newsType)
                     saveNewsToDBWithContentProvider(it.results, newsType)
                 }
                 .map {
                     it.results.map { it.toNews() }
-//                    it.results.map { it.toContentValue() }
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
