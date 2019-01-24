@@ -37,7 +37,7 @@ class NewsActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToFragment(fragment: BaseFragment) {
+    fun goToFragment(fragment: BaseFragment) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit()
