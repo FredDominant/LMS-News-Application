@@ -18,7 +18,7 @@ The API doesn't provide the news details, so users currently only view Headlines
 1. Kotlin
 2. RxJava/Kotlin
 3. [Retrofit](https://square.github.io/retrofit/)
-4. [Room Persistence Library](https://developer.android.com/topic/libraries/architecture/room)
+4. SQLite Database
 5. [Picasso](http://square.github.io/picasso/)
 6. Junit, Espresso and Mockito
 
