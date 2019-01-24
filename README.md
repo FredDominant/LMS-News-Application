@@ -1,5 +1,5 @@
 
-
+[![CircleCI](https://circleci.com/gh/Noblemajesty/LMS-News-Application/tree/develop.svg?style=svg)](https://circleci.com/gh/Noblemajesty/LMS-News-Application/tree/develop)
 # News Application
 This is an Android application that consumes New York Times [Top Stories API](https://any-api.com/nytimes_com/top_stories/docs/API_Description) and displays the following news headlines and abstracts:
 1. Top News
